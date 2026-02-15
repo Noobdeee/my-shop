@@ -167,15 +167,29 @@ function logoutAdmin() {
   document.getElementById("adminBtn").style.display = "block";
   renderProducts();
 }
-
 function loadProducts() {
-  fetch(API_URL)
-    .then(res => res.json())
-    .then(data => {
-      products = data;
-      renderProducts();
-    });
+  fetch(API_URL, {
+    method: "GET",
+    headers: {
+      "Content-Type": "text/plain"
+    }
+  })
+  .then(res => {
+    if (!res.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return res.json();
+  })
+  .then(data => {
+    products = data;
+    renderProducts();
+  })
+  .catch(err => {
+    console.error("Load products failed:", err);
+    alert("Failed to load products. Please refresh or check backend.");
+  });
 }
+
 
 function previewImage(event, i) {
   const reader = new FileReader();
