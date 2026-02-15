@@ -195,7 +195,7 @@ function renderProducts() {
 
     if (!adminMode) {
 
-      card.innerHTML = `
+     card.innerHTML = `
   <img src="${p.image || ''}" id="preview-${i}">
   <div class="info">
     <input id="name-${i}" value="${p.name || ''}" placeholder="Name">
@@ -209,9 +209,10 @@ function renderProducts() {
 
     <input id="stock-${i}" value="${p.stock || ''}" placeholder="Stock">
     <input id="price-${i}" value="${p.price || ''}" placeholder="Price">
-    <button onclick="event.stopPropagation(); saveProduct(${i})">Save</button>
+    <button ${adminMode ? '' : 'style="display:none;"'} onclick="event.stopPropagation(); saveProduct(${i})">Save</button>
   </div>
 `;
+
 
 
       card.onclick = () => {
