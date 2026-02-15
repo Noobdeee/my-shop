@@ -44,7 +44,7 @@ header {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(180px,1fr));
+  grid-template-columns: repeat(2, 1fr); /* 2 items per row */
   gap: 20px;
   padding: 20px;
   margin-top: 10px;
@@ -85,6 +85,11 @@ header {
 
 .card.show .info {
   display: block; /* Show on click */
+}
+
+.card .info .text {
+  margin-top: 6px;
+  line-height: 1.4;
 }
 
 .card .info input,
@@ -197,8 +202,9 @@ function renderProducts() {
       <img src="${p.image || ''}" id="preview-${i}">
       <div class="name">${p.name || ''}</div>
       <div class="info">
-        <textarea id="description-${i}" placeholder="Description" ${adminMode ? '' : 'readonly'}>${p.description || ''}</textarea>
         ${adminMode ? `
+          <input id="name-${i}" value="${p.name || ''}" placeholder="Name">
+          <textarea id="description-${i}" placeholder="Description">${p.description || ''}</textarea>
           <label>Paste Image URL:</label>
           <input id="imageUrl-${i}" value="${p.image || ''}" placeholder="https://...">
           <label>Or choose file from device:</label>
@@ -207,8 +213,9 @@ function renderProducts() {
           <input id="price-${i}" value="${p.price || ''}" placeholder="Price">
           <button onclick="event.stopPropagation(); saveProduct(${i})">Save</button>
         ` : `
-          <p><b>Price:</b> ${p.price || '-'}</p>
-          <p><b>Stock:</b> ${p.stock || '-'}</p>
+          <div class="text"><b>Description:</b> ${p.description || '-'}</div>
+          <div class="text"><b>Price:</b> ${p.price || '-'}</div>
+          <div class="text"><b>Stock:</b> ${p.stock || '-'}</div>
         `}
       </div>
     `;
@@ -265,7 +272,6 @@ async function saveProduct(i) {
   });
 }
 
-// Initial load
 loadProducts();
 </script>
 </body>
