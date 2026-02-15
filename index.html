@@ -232,8 +232,7 @@ function renderProducts() {
 }
 
 
-  
-async function saveProduct(i) {
+  async function saveProduct(i) {
   const fileInput = document.getElementById(`file-${i}`);
   const urlInput = document.getElementById(`imageUrl-${i}`);
   let image = "";
@@ -250,6 +249,7 @@ async function saveProduct(i) {
     });
   }
 
+  // Save data to API
   fetch(API_URL, {
     method: "POST",
     body: JSON.stringify({
@@ -265,8 +265,19 @@ async function saveProduct(i) {
   .then(res => res.json())
   .then(data => {
     if (data.success) {
-      alert("Saved Successfully");
-      loadProducts();
+      // ✅ Update product data in local array
+      products[i].name = document.getElementById(`name-${i}`).value;
+      products[i].description = document.getElementById(`description-${i}`).value;
+      products[i].stock = document.getElementById(`stock-${i}`).value;
+      products[i].price = document.getElementById(`price-${i}`).value;
+      products[i].image = image;
+
+      // ✅ Update only the DOM elements for this product
+      document.getElementById(`preview-${i}`).src = image;
+      const nameDiv = document.querySelectorAll('.card .name')[i];
+      if(nameDiv) nameDiv.textContent = products[i].name;
+
+      alert("Saved Successfully!");
     } else {
       alert("Error saving product: " + data.error);
     }
@@ -277,6 +288,9 @@ async function saveProduct(i) {
   });
 }
 
+
+
+  
 loadProducts();
 </script>
 </body>
