@@ -1,90 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete v1</title>
-
 <style>
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background: #f5f6fa;
-}
-
-header {
-  background: #111;
-  color: white;
-  padding: 18px;
-  text-align: center;
-  font-size: 20px;
-  font-weight: 600;
-}
-
-#adminBar {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: #222;
-  color: white;
-  padding: 10px;
-  text-align: center;
-  z-index: 9999;
-}
-
-#adminBar button {
-  margin-left: 10px;
-  padding: 5px 12px;
-  border: none;
-  border-radius: 6px;
-  background: red;
-  color: white;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-  padding: 15px;
-  margin-top: 10px;
-}
-
+/* --- Professional UI --- */
 .card {
   background: white;
   border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
   overflow: hidden;
   cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
 }
 
 .card img {
   width: 100%;
-  height: 170px;
+  height: 200px;
   object-fit: cover;
   background: #eee;
 }
 
 .card .info {
   padding: 12px;
+  display: none; /* Hidden initially */
 }
 
-.card h3 {
-  margin: 0;
-  font-size: 16px;
+.card.show .info {
+  display: block; /* Show on click */
 }
 
-.details {
-  margin-top: 10px;
-  display: none;
-}
-
-.show {
-  display: block;
-}
-
-.card input,
-.card textarea {
+.card .info input,
+.card .info textarea {
   width: 100%;
   margin-top: 6px;
   padding: 6px;
@@ -92,10 +39,10 @@ header {
   border-radius: 6px;
 }
 
-.card button {
+.card .info button {
   width: 100%;
   margin-top: 8px;
-  padding: 8px;
+  padding: 10px;
   border: none;
   border-radius: 8px;
   background: #111;
@@ -103,196 +50,48 @@ header {
   font-weight: 600;
 }
 
-#adminBtn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 14px;
-  border-radius: 50%;
-  border: none;
-  background: #111;
-  color: white;
-  font-size: 18px;
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(180px,1fr));
+  gap: 20px;
+  padding: 20px;
 }
 </style>
-</head>
-
-<body>
-
-<header>My Shop Herabete</header>
-
-<div id="adminBar">
-  Admin Mode: <b>ON</b>
-  <button onclick="logoutAdmin()">OFF</button>
-</div>
-
-<div class="grid" id="productList"></div>
-
-<button id="adminBtn" onclick="openAdmin()">⚙️</button>
 
 <script>
-
-const API_URL = "https://script.google.com/macros/s/AKfycbyOmIqLIuMRGhbldVXgh3HGQG8OhOAVMZTa3Car_v1Ibaj75RvYU24wU6lUd68lRRXK/exec";
-
-let adminMode = false;
-let products = [];
-
-function openAdmin() {
-  const pass = prompt("Enter Admin Password");
-  if (!pass) return;
-
-  fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({
-      action: "login",
-      password: pass
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      adminMode = true;
-      document.getElementById("adminBar").style.display = "block";
-      document.getElementById("adminBtn").style.display = "none";
-      renderProducts();
-    } else {
-      alert("Wrong password");
-    }
-  });
-}
-
-function logoutAdmin() {
-  adminMode = false;
-  document.getElementById("adminBar").style.display = "none";
-  document.getElementById("adminBtn").style.display = "block";
-  renderProducts();
-}
-
-function loadProducts() {
-  fetch(API_URL)
-    .then(res => res.json())
-    .then(data => {
-      products = data;
-      renderProducts();
-    });
-}
-
-function previewImage(event, i) {
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    document.getElementById(`preview-${i}`).src = e.target.result;
-  };
-  reader.readAsDataURL(event.target.files[0]);
-}
 function renderProducts() {
   const list = document.getElementById("productList");
   list.innerHTML = "";
 
   products.forEach((p, i) => {
-
     const card = document.createElement("div");
     card.className = "card";
 
-    if (!adminMode) {
+    // Build the card HTML
+    card.innerHTML = `
+      <img src="${p.image || ''}" id="preview-${i}">
+      <div class="info">
+        <input id="name-${i}" value="${p.name || ''}" placeholder="Name" ${adminMode ? '' : 'readonly'}>
+        <textarea id="description-${i}" placeholder="Description" ${adminMode ? '' : 'readonly'}>${p.description || ''}</textarea>
+        ${adminMode ? `<label>Paste Image URL:</label>
+        <input id="imageUrl-${i}" value="${p.image || ''}" placeholder="https://...">
+        <label>Or choose file from device:</label>
+        <input type="file" id="file-${i}" onchange="previewImage(event, ${i})">
+        <input id="stock-${i}" value="${p.stock || ''}" placeholder="Stock">
+        <input id="price-${i}" value="${p.price || ''}" placeholder="Price">
+        <button onclick="event.stopPropagation(); saveProduct(${i})">Save</button>` : `
+        <p><b>Price:</b> ${p.price || '-'}</p>
+        <p><b>Stock:</b> ${p.stock || '-'}</p>
+        `}
+      </div>
+    `;
 
-     card.innerHTML = `
-  <img src="${p.image || ''}" id="preview-${i}">
-  <div class="info">
-    <input id="name-${i}" value="${p.name || ''}" placeholder="Name">
-    <textarea id="description-${i}" placeholder="Description">${p.description || ''}</textarea>
-
-    <label>Paste Image URL:</label>
-    <input id="imageUrl-${i}" value="${p.image || ''}" placeholder="https://...">
-
-    <label>Or choose file from device:</label>
-    <input type="file" id="file-${i}" onchange="previewImage(event, ${i})">
-
-    <input id="stock-${i}" value="${p.stock || ''}" placeholder="Stock">
-    <input id="price-${i}" value="${p.price || ''}" placeholder="Price">
-    <button ${adminMode ? '' : 'style="display:none;"'} onclick="event.stopPropagation(); saveProduct(${i})">Save</button>
-  </div>
-`;
-
-
-
-      card.onclick = () => {
-        const details = document.getElementById(`details-${i}`);
-        if (details) details.classList.toggle("show");
-      };
-
-    } else {
-
-
-      card.innerHTML = `
-        <img src="${p.image || ''}" id="preview-${i}">
-        <div class="info">
-          <input id="name-${i}" value="${p.name || ''}" placeholder="Name">
-          <textarea id="description-${i}" placeholder="Description">${p.description || ''}</textarea>
-
-          <input type="file" id="file-${i}" onchange="previewImage(event, ${i})">
-
-          <input id="stock-${i}" value="${p.stock || ''}" placeholder="Stock">
-          <input id="price-${i}" value="${p.price || ''}" placeholder="Price">
-          <button onclick="event.stopPropagation(); saveProduct(${i})">Save</button>
-        </div>
-      `;
-    }
-    
-    console.log("Rendering card for product:", p);
-
+    // Toggle info on click
+    card.onclick = () => {
+      card.classList.toggle("show");
+    };
 
     list.appendChild(card);
   });
 }
-async function saveProduct(i) {
-  const fileInput = document.getElementById(`file-${i}`);
-  const urlInput = document.getElementById(`imageUrl-${i}`);
-
-  let image = "";
-
-  // 1️⃣ If a URL is entered, use it
-  if (urlInput && urlInput.value.trim() !== "") {
-    image = urlInput.value.trim();
-  }
-
-  // 2️⃣ If a file is chosen, upload it and override image
-  if (fileInput && fileInput.files[0]) {
-    image = await new Promise(resolve => {
-      const reader = new FileReader();
-      reader.onload = e => resolve(e.target.result);
-      reader.readAsDataURL(fileInput.files[0]);
-    });
-  }
-
-  fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({
-      action: "update",
-      row: products[i].row || i + 2,
-      name: document.getElementById(`name-${i}`).value,
-      description: document.getElementById(`description-${i}`).value,
-      stock: document.getElementById(`stock-${i}`).value,
-      price: document.getElementById(`price-${i}`).value,
-      image: image // this will now be "" if user cleared URL and no file chosen
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      alert("Saved Successfully");
-      loadProducts();
-    } else {
-      alert("Error saving product: " + data.error);
-    }
-  })
-  .catch(err => {
-    console.error("Error saving product:", err);
-    alert("Failed to save product. Check console for details.");
-  });
-}
-
-loadProducts();
-
 </script>
-</body>
-</html>
