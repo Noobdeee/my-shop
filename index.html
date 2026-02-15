@@ -2,7 +2,9 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Git 5.0</title>
+<title>My Shop Herabete G7</title>
+
+<link rel="icon" href="data:,">
 
 <style>
 body {
@@ -10,7 +12,6 @@ body {
   font-family: 'Segoe UI', Arial, sans-serif;
   background: #f5f6fa;
 }
-
 header {
   background: #111;
   color: white;
@@ -19,7 +20,6 @@ header {
   font-size: 20px;
   font-weight: 600;
 }
-
 #adminBar {
   display: none;
   position: fixed;
@@ -32,7 +32,6 @@ header {
   text-align: center;
   z-index: 9999;
 }
-
 #adminBar button {
   margin-left: 10px;
   padding: 5px 12px;
@@ -41,7 +40,6 @@ header {
   background: red;
   color: white;
 }
-
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -49,40 +47,21 @@ header {
   padding: 15px;
   margin-top: 10px;
 }
-
 .card {
   background: white;
   border-radius: 14px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   overflow: hidden;
-  cursor: pointer;
 }
-
 .card img {
   width: 100%;
   height: 170px;
   object-fit: cover;
   background: #eee;
 }
-
 .card .info {
   padding: 12px;
 }
-
-.card h3 {
-  margin: 0;
-  font-size: 16px;
-}
-
-.details {
-  margin-top: 10px;
-  display: none;
-}
-
-.show {
-  display: block;
-}
-
 .card input,
 .card textarea {
   width: 100%;
@@ -91,7 +70,6 @@ header {
   border: 1px solid #ddd;
   border-radius: 6px;
 }
-
 .card button {
   width: 100%;
   margin-top: 8px;
@@ -102,7 +80,6 @@ header {
   color: white;
   font-weight: 600;
 }
-
 #adminBtn {
   position: fixed;
   bottom: 20px;
@@ -119,7 +96,7 @@ header {
 
 <body>
 
-<header>My Shop Herabete G4</header>
+<header>My Shop Herabete G6</header>
 
 <div id="adminBar">
   Admin Mode: <b>ON</b>
@@ -132,10 +109,33 @@ header {
 
 <script>
 
-const API_URL = "https://script.google.com/macros/s/AKfycby5nYWNdcql1KFMp6CCo3Q5N9cA3as2BVP27IBvgJ1gCj94wDMrsjC0vPuG0BZqdkba/exec";
 
+
+  
+const API_URL = "https://script.googleusercontent.com/macros/echo?user_content_key=AY5xjrQ0PP4DaAqJuqNFbCusyv0K2Sp52RPzTl4ldv4LZ0BYyuG6MrlnUDSyuSh7iB-0ZHc985MivZTUojbbDBoS9nGWABHHKgA8osfo9mPnG4a4Unls7VfQNgNqYwcfhzh0dm5LWoUnlU9T9-EbEQHpWiHtvx-ysbmDJFrQnpAeaz03sAoCDHAnlVPBkkqR-CRrH22nLiMttnssX2pd--B8qxiak-t2a9dw3DD6kl0m9sj6qurzP1kW_9iJeNmxhLGJKRhDALo90PdpwidfpMaSwTCsIJA1Eg&lib=Mm5TD1Rsu1ku9GN4gS5A7AWbsYizgyvoY";
+
+
+
+  
 let adminMode = false;
 let products = [];
+
+/* ================= LOAD PRODUCTS ================= */
+
+function loadProducts() {
+  fetch(API_URL)
+    .then(res => res.json())
+    .then(data => {
+      products = data;
+      renderProducts();
+    })
+    .catch(err => {
+      console.error("Load failed:", err);
+      alert("Backend connection failed.");
+    });
+}
+
+/* ================= ADMIN LOGIN ================= */
 
 function openAdmin() {
   const pass = prompt("Enter Admin Password");
@@ -143,6 +143,7 @@ function openAdmin() {
 
   fetch(API_URL, {
     method: "POST",
+    headers: { "Content-Type": "text/plain" },
     body: JSON.stringify({
       action: "login",
       password: pass
@@ -158,6 +159,10 @@ function openAdmin() {
     } else {
       alert("Wrong password");
     }
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Login failed.");
   });
 }
 
@@ -167,37 +172,9 @@ function logoutAdmin() {
   document.getElementById("adminBtn").style.display = "block";
   renderProducts();
 }
-function loadProducts() {
-  fetch(API_URL, {
-    method: "GET",
-    headers: {
-      "Content-Type": "text/plain"
-    }
-  })
-  .then(res => {
-    if (!res.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return res.json();
-  })
-  .then(data => {
-    products = data;
-    renderProducts();
-  })
-  .catch(err => {
-    console.error("Load products failed:", err);
-    alert("Failed to load products. Please refresh or check backend.");
-  });
-}
 
+/* ================= RENDER PRODUCTS ================= */
 
-function previewImage(event, i) {
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    document.getElementById(`preview-${i}`).src = e.target.result;
-  };
-  reader.readAsDataURL(event.target.files[0]);
-}
 function renderProducts() {
   const list = document.getElementById("productList");
   list.innerHTML = "";
@@ -207,46 +184,29 @@ function renderProducts() {
     const card = document.createElement("div");
     card.className = "card";
 
-    if (!adminMode) {
+    if (adminMode) {
 
       card.innerHTML = `
-  <img src="${p.image || ''}" id="preview-${i}">
-  <div class="info">
-    <input id="name-${i}" value="${p.name || ''}" placeholder="Name">
-    <textarea id="description-${i}" placeholder="Description">${p.description || ''}</textarea>
-
-    <label>Paste Image URL:</label>
-    <input id="imageUrl-${i}" value="${p.image || ''}" placeholder="https://...">
-
-    <label>Or choose file from device:</label>
-    <input type="file" id="file-${i}" onchange="previewImage(event, ${i})">
-
-    <input id="stock-${i}" value="${p.stock || ''}" placeholder="Stock">
-    <input id="price-${i}" value="${p.price || ''}" placeholder="Price">
-    <button onclick="event.stopPropagation(); saveProduct(${i})">Save</button>
-  </div>
-`;
-
-
-      card.onclick = () => {
-        const details = document.getElementById(`details-${i}`);
-        if (details) details.classList.toggle("show");
-      };
-
-    } else {
-
-
-      card.innerHTML = `
-        <img src="${p.image || ''}" id="preview-${i}">
+        <img src="${p.image || ''}">
         <div class="info">
           <input id="name-${i}" value="${p.name || ''}" placeholder="Name">
           <textarea id="description-${i}" placeholder="Description">${p.description || ''}</textarea>
-
-          <input type="file" id="file-${i}" onchange="previewImage(event, ${i})">
-
+          <input id="image-${i}" value="${p.image || ''}" placeholder="Image URL">
           <input id="stock-${i}" value="${p.stock || ''}" placeholder="Stock">
           <input id="price-${i}" value="${p.price || ''}" placeholder="Price">
-          <button onclick="event.stopPropagation(); saveProduct(${i})">Save</button>
+          <button onclick="saveProduct(${i})">Save</button>
+        </div>
+      `;
+
+    } else {
+
+      card.innerHTML = `
+        <img src="${p.image || ''}">
+        <div class="info">
+          <h3>${p.name}</h3>
+          <p>${p.description}</p>
+          <p><b>Stock:</b> ${p.stock}</p>
+          <p><b>Price:</b> ${p.price}</p>
         </div>
       `;
     }
@@ -254,28 +214,14 @@ function renderProducts() {
     list.appendChild(card);
   });
 }
-async function saveProduct(i) {
-  const fileInput = document.getElementById(`file-${i}`);
-  const urlInput = document.getElementById(`imageUrl-${i}`);
 
-  let image = "";
+/* ================= SAVE PRODUCT ================= */
 
-  // 1️⃣ If a URL is entered, use it
-  if (urlInput && urlInput.value.trim() !== "") {
-    image = urlInput.value.trim();
-  }
-
-  // 2️⃣ If a file is chosen, upload it and override image
-  if (fileInput && fileInput.files[0]) {
-    image = await new Promise(resolve => {
-      const reader = new FileReader();
-      reader.onload = e => resolve(e.target.result);
-      reader.readAsDataURL(fileInput.files[0]);
-    });
-  }
+function saveProduct(i) {
 
   fetch(API_URL, {
     method: "POST",
+    headers: { "Content-Type": "text/plain" },
     body: JSON.stringify({
       action: "update",
       row: products[i].row || i + 2,
@@ -283,21 +229,21 @@ async function saveProduct(i) {
       description: document.getElementById(`description-${i}`).value,
       stock: document.getElementById(`stock-${i}`).value,
       price: document.getElementById(`price-${i}`).value,
-      image: image // this will now be "" if user cleared URL and no file chosen
+      image: document.getElementById(`image-${i}`).value
     })
   })
   .then(res => res.json())
   .then(data => {
     if (data.success) {
-      alert("Saved Successfully");
+      alert("Saved!");
       loadProducts();
     } else {
-      alert("Error saving product: " + data.error);
+      alert("Save error.");
     }
   })
   .catch(err => {
-    console.error("Error saving product:", err);
-    alert("Failed to save product. Check console for details.");
+    console.error(err);
+    alert("Save failed.");
   });
 }
 
