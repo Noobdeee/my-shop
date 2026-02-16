@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v7.3</title>
+<title>My Shop Herabete Admin v7.4</title>
 
 <style>
 body {
@@ -160,7 +160,7 @@ header {
 <button id="adminBtn" onclick="openAdmin()">⚙️</button>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxyOOR--pyT5YtyflhSn2RHlxBOlXb9VMk-9ahHSWHeVMIykIH0RL6w4pKsJey0FOSD/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxTfPYxxb3MM78gy6aE_ckjUzp8wLqJ_K2hhmzJU8eXoEyngdvAGRcE9DGfGFMb8lpQ/exec";
 
 let adminMode = false;
 let products = [];
@@ -325,12 +325,19 @@ function deleteProduct(i) {
 
 
 
-  
+  // Existing function (unchanged)
 function addProduct() {
-  const name = prompt("Enter product name") || "";
-  const price = prompt("Enter product price") || "";
-  const stock = prompt("Enter product stock") || "";
-  const description = prompt("Enter description") || "";
+  // If you want silent add (no prompt), set this flag to true
+  const silent = true; // ✅ change to false if you want prompts
+
+  let name = "", price = "", stock = "", description = "";
+
+  if (!silent) {
+    name = prompt("Enter product name") || "";
+    price = prompt("Enter product price") || "";
+    stock = prompt("Enter product stock") || "";
+    description = prompt("Enter description") || "";
+  }
 
   fetch(API_URL, {
     method: "POST",
@@ -345,13 +352,19 @@ function addProduct() {
   .then(res => res.json())
   .then(data => {
     if(data.success) {
-      alert("Product added with ID " + data.id);
-      loadProducts(); // reload grid
+      if (!silent) {
+        alert("Product added with ID " + data.id);
+      }
+      loadProducts(); // reload grid to show new product
     } else {
-      alert("Failed to add product");
+      alert("Failed to add product: " + (data.error || ""));
     }
-  });
+  })
+  .catch(err => console.error("Add product error:", err));
 }
+
+
+  
 
 
 loadProducts();
