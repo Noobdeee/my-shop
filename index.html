@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v7.5</title>
+<title>My Shop Herabete Admin v7.6</title>
 
 <style>
 body {
@@ -160,7 +160,7 @@ header {
 <button id="adminBtn" onclick="openAdmin()">⚙️</button>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxCfqgibzURBMJmtZ0D4umrBxA_aK5heWch2EYAugu3k0b-oFRm3FisqNsOSHrTkICr/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyeBEYgBOgYWPEiohOs2TJRlMezX-3BarDlWdYHzj3Mt9p2ZE5I6oZNLmRDwguoIjyM/exec";
 
 let adminMode = false;
 let products = [];
@@ -211,8 +211,7 @@ function previewImage(event, i) {
 }
 
 
-
-  // Render products
+// Render products
 function renderProducts() {
   const list = document.getElementById("productList");
   list.innerHTML = "";
@@ -235,14 +234,13 @@ function renderProducts() {
         const fromIndex = parseInt(e.dataTransfer.getData("text/plain"));
         const toIndex = i;
 
-        // Swap products in array
-        const temp = products[fromIndex];
-        products[fromIndex] = products[toIndex];
-        products[toIndex] = temp;
+        // ✅ Remove dragged item and insert at new position
+        const dragged = products.splice(fromIndex, 1)[0];
+        products.splice(toIndex, 0, dragged);
 
         renderProducts(); // re-render grid
 
-        // Update serials in backend sheet
+        // ✅ Prepare new order for backend (serials = 1,2,3,…)
         const orderData = products.map((p, idx) => ({
           row: p.row,
           id: p.id
@@ -251,7 +249,7 @@ function renderProducts() {
         fetch(API_URL, {
           method: "POST",
           body: JSON.stringify({
-            action: "reorder",
+            action: "reorder", // your backend should handle "reorder" and update column A
             order: orderData
           })
         })
@@ -296,6 +294,11 @@ function renderProducts() {
     list.appendChild(card);
   });
 }
+
+
+
+
+  
 
 
 
