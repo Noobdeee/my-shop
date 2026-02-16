@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v7.4</title>
+<title>My Shop Herabete Admin v7.5</title>
 
 <style>
 body {
@@ -160,7 +160,7 @@ header {
 <button id="adminBtn" onclick="openAdmin()">⚙️</button>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxTfPYxxb3MM78gy6aE_ckjUzp8wLqJ_K2hhmzJU8eXoEyngdvAGRcE9DGfGFMb8lpQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxCfqgibzURBMJmtZ0D4umrBxA_aK5heWch2EYAugu3k0b-oFRm3FisqNsOSHrTkICr/exec";
 
 let adminMode = false;
 let products = [];
@@ -210,7 +210,9 @@ function previewImage(event, i) {
   reader.readAsDataURL(event.target.files[0]);
 }
 
-// Render products
+
+
+  // Render products
 function renderProducts() {
   const list = document.getElementById("productList");
   list.innerHTML = "";
@@ -218,6 +220,48 @@ function renderProducts() {
   products.forEach((p, i) => {
     const card = document.createElement("div");
     card.className = "card";
+
+    // Make card draggable in admin mode
+    if (adminMode) {
+      card.setAttribute("draggable", true);
+
+      card.addEventListener("dragstart", e => {
+        e.dataTransfer.setData("text/plain", i); // store index
+      });
+
+      card.addEventListener("dragover", e => e.preventDefault());
+
+      card.addEventListener("drop", e => {
+        const fromIndex = parseInt(e.dataTransfer.getData("text/plain"));
+        const toIndex = i;
+
+        // Swap products in array
+        const temp = products[fromIndex];
+        products[fromIndex] = products[toIndex];
+        products[toIndex] = temp;
+
+        renderProducts(); // re-render grid
+
+        // Update serials in backend sheet
+        const orderData = products.map((p, idx) => ({
+          row: p.row,
+          id: p.id
+        }));
+
+        fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify({
+            action: "reorder",
+            order: orderData
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (!data.success) alert("Failed to reorder products in sheet");
+        })
+        .catch(err => console.error("Reorder error:", err));
+      });
+    }
 
     card.innerHTML = `
       <img src="${p.image || ''}" id="preview-${i}">
@@ -253,6 +297,10 @@ function renderProducts() {
   });
 }
 
+
+
+
+  
 // Save product without closing card
 async function saveProduct(i) {
   const fileInput = document.getElementById(`file-${i}`);
