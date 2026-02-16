@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete v6</title>
+<title>My Shop Herabete Admin v7</title>
 
 <style>
 body {
@@ -44,7 +44,7 @@ header {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 items per row */
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   padding: 20px;
   margin-top: 10px;
@@ -80,11 +80,11 @@ header {
 
 .card .info {
   padding: 12px;
-  display: none; /* Hidden initially */
+  display: none; 
 }
 
 .card.show .info {
-  display: block; /* Show on click */
+  display: block; 
 }
 
 .card .info .text {
@@ -123,6 +123,23 @@ header {
   color: white;
   font-size: 18px;
 }
+
+#adminActions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+#adminActions button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  background: #111;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
 </style>
 </head>
 
@@ -133,6 +150,9 @@ header {
 <div id="adminBar">
   Admin Mode: <b>ON</b>
   <button onclick="logoutAdmin()">OFF</button>
+  <div id="adminActions">
+    <button onclick="addProduct()">➕ Add Product</button>
+  </div>
 </div>
 
 <div class="grid" id="productList"></div>
@@ -190,6 +210,7 @@ function previewImage(event, i) {
   reader.readAsDataURL(event.target.files[0]);
 }
 
+// Render products
 function renderProducts() {
   const list = document.getElementById("productList");
   list.innerHTML = "";
@@ -211,7 +232,8 @@ function renderProducts() {
           <input type="file" id="file-${i}" onchange="previewImage(event, ${i})">
           <input id="stock-${i}" value="${p.stock || ''}" placeholder="Stock">
           <input id="price-${i}" value="${p.price || ''}" placeholder="Price">
-          <button onclick="event.stopPropagation(); saveProduct(${i})">Save</button>
+          <button onclick="event.stopPropagation(); saveProduct(${i})">💾 Save</button>
+          <button onclick="event.stopPropagation(); deleteProduct(${i})">🗑 Delete</button>
         ` : `
           <div class="text"><b>Description:</b> ${p.description || '-'}</div>
           <div class="text"><b>Price:</b> ${p.price || '-'}</div>
@@ -220,7 +242,7 @@ function renderProducts() {
       </div>
     `;
 
-    // Toggle details only when clicking outside inputs/buttons
+    // Toggle details only if clicked outside input/button
     card.onclick = (e) => {
       if (!e.target.closest('input, textarea, button, label')) {
         card.classList.toggle("show");
@@ -231,15 +253,13 @@ function renderProducts() {
   });
 }
 
-
-  async function saveProduct(i) {
+// Save product without closing card
+async function saveProduct(i) {
   const fileInput = document.getElementById(`file-${i}`);
   const urlInput = document.getElementById(`imageUrl-${i}`);
   let image = "";
 
-  if (urlInput && urlInput.value.trim() !== "") {
-    image = urlInput.value.trim();
-  }
+  if (urlInput && urlInput.value.trim() !== "") image = urlInput.value.trim();
 
   if (fileInput && fileInput.files[0]) {
     image = await new Promise(resolve => {
@@ -249,7 +269,6 @@ function renderProducts() {
     });
   }
 
-  // Save data to API
   fetch(API_URL, {
     method: "POST",
     body: JSON.stringify({
@@ -265,22 +284,16 @@ function renderProducts() {
   .then(res => res.json())
   .then(data => {
     if (data.success) {
-      // ✅ Update product data in local array
+      // Update local data and DOM
       products[i].name = document.getElementById(`name-${i}`).value;
       products[i].description = document.getElementById(`description-${i}`).value;
       products[i].stock = document.getElementById(`stock-${i}`).value;
       products[i].price = document.getElementById(`price-${i}`).value;
       products[i].image = image;
-
-      // ✅ Update only the DOM elements for this product
       document.getElementById(`preview-${i}`).src = image;
-      const nameDiv = document.querySelectorAll('.card .name')[i];
-      if(nameDiv) nameDiv.textContent = products[i].name;
-
+      document.querySelectorAll('.card .name')[i].textContent = products[i].name;
       alert("Saved Successfully!");
-    } else {
-      alert("Error saving product: " + data.error);
-    }
+    } else alert("Error saving product: " + data.error);
   })
   .catch(err => {
     console.error("Error saving product:", err);
@@ -288,10 +301,43 @@ function renderProducts() {
   });
 }
 
+// Delete product
+function deleteProduct(i) {
+  if (!confirm("Are you sure you want to delete this product?")) return;
 
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({ action: "delete", row: products[i].row || i + 2 })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      products.splice(i, 1); // remove from local array
+      renderProducts(); // re-render
+    } else alert("Error deleting product: " + data.error);
+  })
+  .catch(err => {
+    console.error("Error deleting product:", err);
+    alert("Failed to delete product.");
+  });
+}
 
-  
+// Add new empty product
+function addProduct() {
+  const newProduct = {
+    name: "New Product",
+    description: "",
+    stock: 0,
+    price: 0,
+    image: "",
+    row: products.length + 2
+  };
+  products.push(newProduct);
+  renderProducts();
+}
+
 loadProducts();
 </script>
+
 </body>
 </html>
