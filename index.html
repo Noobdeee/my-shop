@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v8.1</title>
+<title>My Shop Herabete Admin v9.10</title>
 
 <style>
 body {
@@ -158,8 +158,9 @@ header {
 <div class="grid" id="productList"></div>
 
 <button id="adminBtn" onclick="openAdmin()">⚙️</button>
+
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzGHl0s91gIZNMVbj1qApPFf2ob2jP-zryZUu06ERZ8THrjqhYXfZ2kjMaTerZ9w4po/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyxnxuEAgJCMA9y1y_GRkyYGg8TNbGsY3yAjRAipPVuGoocdA_XQnkIPQCbkrZOWmB5/exec";
 
 let adminMode = false;
 let products = [];
@@ -168,10 +169,10 @@ function openAdmin() {
   const pass = prompt("Enter Admin Password");
   if (!pass) return;
 
- fetch(API_URL, {
-  method: "POST",
-  body: JSON.stringify({ action: "login", password: pass })
-})
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({ action: "login", password: pass })
+  })
   .then(res => res.json())
   .then(data => {
     if (data.success) {
@@ -209,7 +210,101 @@ function previewImage(event, i) {
   reader.readAsDataURL(event.target.files[0]);
 }
 
-// Save product
+
+// Render products
+function renderProducts() {
+  const list = document.getElementById("productList");
+  list.innerHTML = "";
+
+  products.forEach((p, i) => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    // Make card draggable in admin mode
+    if (adminMode) {
+      card.setAttribute("draggable", true);
+
+      card.addEventListener("dragstart", e => {
+        e.dataTransfer.setData("text/plain", i); // store index
+      });
+
+      card.addEventListener("dragover", e => e.preventDefault());
+
+      card.addEventListener("drop", e => {
+        const fromIndex = parseInt(e.dataTransfer.getData("text/plain"));
+        const toIndex = i;
+
+        // ✅ Remove dragged item and insert at new position
+        const dragged = products.splice(fromIndex, 1)[0];
+        products.splice(toIndex, 0, dragged);
+
+        renderProducts(); // re-render grid
+
+        // ✅ Prepare new order for backend (serials = 1,2,3,…)
+        const orderData = products.map((p, idx) => ({
+          row: p.row,
+          id: p.id
+        }));
+
+        fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify({
+            action: "reorder", // your backend should handle "reorder" and update column A
+            order: orderData
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (!data.success) alert("Failed to reorder products in sheet");
+        })
+        .catch(err => console.error("Reorder error:", err));
+      });
+    }
+
+    card.innerHTML = `
+      <img src="${p.image || ''}" id="preview-${i}">
+      <div class="name">${p.name || ''}</div>
+      <div class="info">
+        ${adminMode ? `
+          <input id="name-${i}" value="${p.name || ''}" placeholder="Name">
+          <textarea id="description-${i}" placeholder="Description">${p.description || ''}</textarea>
+          <label>Paste Image URL:</label>
+          <input id="imageUrl-${i}" value="${p.image || ''}" placeholder="https://...">
+          <label>Or choose file from device:</label>
+          <input type="file" id="file-${i}" onchange="previewImage(event, ${i})">
+          <input id="stock-${i}" value="${p.stock || ''}" placeholder="Stock">
+          <input id="price-${i}" value="${p.price || ''}" placeholder="Price">
+          <button onclick="event.stopPropagation(); saveProduct(${i})">💾 Save</button>
+          <button onclick="event.stopPropagation(); deleteProduct(${i})">🗑 Delete</button>
+        ` : `
+          <div class="text"><b>Description:</b> ${p.description || '-'}</div>
+          <div class="text"><b>Price:</b> ${p.price || '-'}</div>
+          <div class="text"><b>Stock:</b> ${p.stock || '-'}</div>
+        `}
+      </div>
+    `;
+
+    // Toggle details only if clicked outside input/button
+    card.onclick = (e) => {
+      if (!e.target.closest('input, textarea, button, label')) {
+        card.classList.toggle("show");
+      }
+    };
+
+    list.appendChild(card);
+  });
+}
+
+
+
+
+  
+
+
+
+
+  
+// Save product without closing card
 async function saveProduct(i) {
   const fileInput = document.getElementById(`file-${i}`);
   const urlInput = document.getElementById(`imageUrl-${i}`);
@@ -225,9 +320,9 @@ async function saveProduct(i) {
     });
   }
 
- fetch(API_URL, {
-  method: "POST",
-  body: JSON.stringify({
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
       action: "update",
       row: products[i].row || i + 2,
       name: document.getElementById(`name-${i}`).value,
@@ -240,6 +335,7 @@ async function saveProduct(i) {
   .then(res => res.json())
   .then(data => {
     if (data.success) {
+      // Update local data and DOM
       products[i].name = document.getElementById(`name-${i}`).value;
       products[i].description = document.getElementById(`description-${i}`).value;
       products[i].stock = document.getElementById(`stock-${i}`).value;
@@ -252,7 +348,7 @@ async function saveProduct(i) {
   })
   .catch(err => {
     console.error("Error saving product:", err);
-    alert("Failed to save product.");
+    alert("Failed to save product. Check console for details.");
   });
 }
 
@@ -260,15 +356,15 @@ async function saveProduct(i) {
 function deleteProduct(i) {
   if (!confirm("Are you sure you want to delete this product?")) return;
 
- fetch(API_URL, {
-  method: "POST",
-  body: JSON.stringify({ action: "delete", row: products[i].row || i + 2 })
-})
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({ action: "delete", row: products[i].row || i + 2 })
+  })
   .then(res => res.json())
   .then(data => {
     if (data.success) {
-      products.splice(i, 1);
-      renderProducts();
+      products.splice(i, 1); // remove from local array
+      renderProducts(); // re-render
     } else alert("Error deleting product: " + data.error);
   })
   .catch(err => {
@@ -277,9 +373,13 @@ function deleteProduct(i) {
   });
 }
 
-// Add product
+
+
+
+  // Existing function (unchanged)
 function addProduct() {
-  const silent = true;
+  // If you want silent add (no prompt), set this flag to true
+  const silent = true; // ✅ change to false if you want prompts
 
   let name = "", price = "", stock = "", description = "";
 
@@ -290,9 +390,9 @@ function addProduct() {
     description = prompt("Enter description") || "";
   }
 
- fetch(API_URL, {
-  method: "POST",
-  body: JSON.stringify({
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
       action: "add",
       name,
       price,
@@ -303,8 +403,10 @@ function addProduct() {
   .then(res => res.json())
   .then(data => {
     if(data.success) {
-      if (!silent) alert("Product added with ID " + data.id);
-      loadProducts();
+      if (!silent) {
+        alert("Product added with ID " + data.id);
+      }
+      loadProducts(); // reload grid to show new product
     } else {
       alert("Failed to add product: " + (data.error || ""));
     }
@@ -312,9 +414,12 @@ function addProduct() {
   .catch(err => console.error("Add product error:", err));
 }
 
+
+  
+
+
 loadProducts();
 </script>
-
 
 </body>
 </html>
