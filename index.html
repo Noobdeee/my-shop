@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v7.10</title>
+<title>My Shop Herabete Admin v8.0</title>
 
 <style>
 body {
@@ -160,7 +160,7 @@ header {
 <button id="adminBtn" onclick="openAdmin()">⚙️</button>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxDyHSntQmAsPuLHn83elE0BadYG2xQ0ceYvjdCkhNUZJEkv-smPIexSEMt5BOARXWF/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzGHl0s91gIZNMVbj1qApPFf2ob2jP-zryZUu06ERZ8THrjqhYXfZ2kjMaTerZ9w4po/exec";
 
 let adminMode = false;
 let products = [];
@@ -169,10 +169,14 @@ function openAdmin() {
   const pass = prompt("Enter Admin Password");
   if (!pass) return;
 
-  fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({ action: "login", password: pass })
-  })
+ fetch(API_URL, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ action: "login", password: pass })
+})
+
   .then(res => res.json())
   .then(data => {
     if (data.success) {
@@ -246,13 +250,17 @@ function renderProducts() {
           id: p.id
         }));
 
-        fetch(API_URL, {
-          method: "POST",
-          body: JSON.stringify({
-            action: "reorder", // your backend should handle "reorder" and update column A
-            order: orderData
-          })
-        })
+      fetch(API_URL, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    action: "reorder",
+    order: orderData
+  })
+})
+
         .then(res => res.json())
         .then(data => {
           if (!data.success) alert("Failed to reorder products in sheet");
@@ -320,9 +328,13 @@ async function saveProduct(i) {
     });
   }
 
-  fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({
+ fetch(API_URL, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+
       action: "update",
       row: products[i].row || i + 2,
       name: document.getElementById(`name-${i}`).value,
@@ -356,10 +368,14 @@ async function saveProduct(i) {
 function deleteProduct(i) {
   if (!confirm("Are you sure you want to delete this product?")) return;
 
-  fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({ action: "delete", row: products[i].row || i + 2 })
-  })
+ fetch(API_URL, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ action: "delete", row: products[i].row || i + 2 })
+})
+
   .then(res => res.json())
   .then(data => {
     if (data.success) {
@@ -390,9 +406,13 @@ function addProduct() {
     description = prompt("Enter description") || "";
   }
 
-  fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({
+fetch(API_URL, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+
       action: "add",
       name,
       price,
