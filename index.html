@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v9.19</title>
+<title>My Shop Herabete Admin v9.20</title>
 
 <style>
 body {
@@ -242,34 +242,23 @@ if (user.uid === ADMIN_UID) {
 });
 
 
-
 window.unlockAdmin = async () => {
 
   const password = prompt("Enter Admin Password");
   if (!password) return;
 
-  const user = auth.currentUser;
-  if (!user) {
-    alert("Not logged in");
-    return;
-  }
-
-  const token = await user.getIdToken();
-
-  // ✅ NO custom headers (prevents CORS preflight)
   const res = await fetch(API_URL, {
     method: "POST",
     body: JSON.stringify({
-      action: "verifyAdminPassword",
-      password: password,
-      token: token
+      action: "login",
+      password: password
     })
   });
 
-  const result = await res.text();
+  const data = await res.json();
 
-  if (result === "OK") {
-    window.adminUnlocked = true; // ✅ fixed
+  if (data.success) {
+    window.adminUnlocked = true;
     document.getElementById("adminBar").style.display = "block";
     document.getElementById("adminUnlockBtn").style.display = "none";
     renderProducts();
@@ -278,8 +267,6 @@ window.unlockAdmin = async () => {
     alert("Wrong password ❌");
   }
 };
-
-
 
 
 
@@ -426,7 +413,7 @@ function renderProducts() {
       <img src="${p.image || ''}" id="preview-${i}">
       <div class="name">${p.name || ''}</div>
       <div class="info">
-        ${adminUnlocked ? `
+       ${window.adminUnlocked ? `
           <input id="name-${i}" value="${p.name || ''}" placeholder="Name">
           <textarea id="description-${i}" placeholder="Description">${p.description || ''}</textarea>
           <label>Paste Image URL:</label>
