@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link rel="icon" href="data:,">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v9.23.0</title>
+<title>My Shop Herabete Admin v9.24</title>
 
 <style>
 body {
@@ -188,10 +190,11 @@ const ADMIN_UID = "mOP5jc6j28b8SIvXEyskqCtsQZG3";
       });
   };
 
-  function logoutUser = () => {
-    signOut(auth);
-  };
+  
 
+const logoutUser = () => {
+  signOut(auth);
+};
 
 
 
@@ -593,7 +596,7 @@ if (!requireAdmin()) return;
   document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("loginBtn")
-    ?.addEventListener("click", googleLogin);
+    ?.addEventListener("click", googleLogin());
 
   document.getElementById("logoutBtn")
     ?.addEventListener("click", logoutUser);
