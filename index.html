@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v9.10</title>
+<title>My Shop Herabete Admin v9.11</title>
 
 <style>
 body {
@@ -143,6 +143,64 @@ header {
 </style>
 </head>
 
+
+
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { 
+    getAuth, 
+    GoogleAuthProvider, 
+    signInWithPopup,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCV432JfpHR3abZJXPDthNvH2jDMGLRcrM",
+    authDomain: "my-shop-app-dc042.firebaseapp.com",
+    projectId: "my-shop-app-dc042",
+    storageBucket: "my-shop-app-dc042.firebasestorage.app",
+    messagingSenderId: "393287049357",
+    appId: "1:393287049357:web:1460ddf82ddad440e2c2c4"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  const provider = new GoogleAuthProvider();
+
+  window.googleLogin = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        alert("Google Login Successful");
+        console.log(result.user);
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
+
+  window.logoutUser = () => {
+    signOut(auth);
+  };
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("Logged in:", user.displayName);
+    } else {
+      console.log("Not logged in");
+    }
+  });
+</script>
+
+
+
+
+
+
+
+
+  
 <body>
 
 <header>My Shop Herabete</header>
