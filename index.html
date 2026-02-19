@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v9.18</title>
+<title>My Shop Herabete Admin v9.19</title>
 
 <style>
 body {
@@ -243,7 +243,6 @@ if (user.uid === ADMIN_UID) {
 
 
 
-
 window.unlockAdmin = async () => {
 
   const password = prompt("Enter Admin Password");
@@ -257,22 +256,20 @@ window.unlockAdmin = async () => {
 
   const token = await user.getIdToken();
 
+  // ✅ NO custom headers (prevents CORS preflight)
   const res = await fetch(API_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + token
-    },
     body: JSON.stringify({
       action: "verifyAdminPassword",
-      password: password
+      password: password,
+      token: token
     })
   });
 
   const result = await res.text();
 
   if (result === "OK") {
-    window.window.window.window.window.window.adminUnlocked = true;
+    window.adminUnlocked = true; // ✅ fixed
     document.getElementById("adminBar").style.display = "block";
     document.getElementById("adminUnlockBtn").style.display = "none";
     renderProducts();
