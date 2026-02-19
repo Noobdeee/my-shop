@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v9.14</title>
+<title>My Shop Herabete Admin v9.15</title>
 
 <style>
 body {
@@ -166,6 +166,9 @@ header {
     appId: "1:393287049357:web:1460ddf82ddad440e2c2c4"
   };
 
+
+    let adminUnlocked = false;
+
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
     
@@ -205,17 +208,22 @@ onAuthStateChanged(auth, (user) => {
     userSection.style.display = "flex";
     loginBtn.style.display = "none";
 
-    // 🔒 ADMIN CHECK
-    if (user.uid === ADMIN_UID) {
-      adminBar.style.display = "block";
-      adminBtn.style.display = "none";
-      adminMode = true;
-    } else {
-      adminBar.style.display = "none";
-      adminBtn.style.display = "none"; // hide gear button from customers
-      adminMode = false;
-    }
 
+
+
+    const adminBar = document.getElementById("adminBar");
+const adminUnlockBtn = document.getElementById("adminUnlockBtn");
+
+adminBar.style.display = "none";
+adminUnlockBtn.style.display = "none";
+adminUnlocked = false; // reset every login change
+
+// 🔒 ADMIN CHECK
+if (user.uid === ADMIN_UID) {
+  adminUnlockBtn.style.display = "block"; // must unlock first
+}
+
+    
     renderProducts();
 
   } else {
@@ -225,7 +233,7 @@ onAuthStateChanged(auth, (user) => {
 
     adminBar.style.display = "none";
     adminBtn.style.display = "none";
-    adminMode = false;
+    adminUnlocked = false;
 
     renderProducts();
   }
@@ -279,44 +287,29 @@ onAuthStateChanged(auth, (user) => {
 
 <div class="grid" id="productList"></div>
 
-<button id="adminBtn" onclick="openAdmin()">⚙️</button>
 
+  
+<button id="adminUnlockBtn" onclick="unlockAdmin()" style="display:none;">
+  🔐 Open Admin
+</button>
+
+
+  
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyxnxuEAgJCMA9y1y_GRkyYGg8TNbGsY3yAjRAipPVuGoocdA_XQnkIPQCbkrZOWmB5/exec";
 
-let adminMode = false;
+let adminUnlocked = false;
 let products = [];
 
 
 
   
-function openAdmin() {
-  const pass = prompt("Enter Admin Password");
-  if (!pass) return;
-
-  fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({ action: "login", password: pass })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      adminMode = true;
-      document.getElementById("adminBar").style.display = "block";
-      document.getElementById("adminBtn").style.display = "none";
-      renderProducts();
-    } else {
-      alert("Wrong password");
-    }
-  });
-}
-
 
 
 
   
 function logoutAdmin() {
-  adminMode = false;
+  adminUnlocked = false;
   document.getElementById("adminBar").style.display = "none";
   document.getElementById("adminBtn").style.display = "block";
   renderProducts();
@@ -350,7 +343,7 @@ function renderProducts() {
     card.className = "card";
 
     // Make card draggable in admin mode
-    if (adminMode) {
+    if (adminUnlocked) {
       card.setAttribute("draggable", true);
 
       card.addEventListener("dragstart", e => {
@@ -394,7 +387,7 @@ function renderProducts() {
       <img src="${p.image || ''}" id="preview-${i}">
       <div class="name">${p.name || ''}</div>
       <div class="info">
-        ${adminMode ? `
+        ${adminUnlocked ? `
           <input id="name-${i}" value="${p.name || ''}" placeholder="Name">
           <textarea id="description-${i}" placeholder="Description">${p.description || ''}</textarea>
           <label>Paste Image URL:</label>
@@ -435,6 +428,11 @@ function renderProducts() {
   
 // Save product without closing card
 async function saveProduct(i) {
+  if (!adminUnlocked) {
+  alert("Unlock admin first");
+  return;
+}
+
   const fileInput = document.getElementById(`file-${i}`);
   const urlInput = document.getElementById(`imageUrl-${i}`);
   let image = "";
@@ -481,10 +479,16 @@ async function saveProduct(i) {
   });
 }
 
-// Delete product
-function deleteProduct(i) {
-  if (!confirm("Are you sure you want to delete this product?")) return;
 
+
+  
+function deleteProduct(i) {
+  if (!adminUnlocked) {
+    alert("Unlock admin first");
+    return;
+  }
+
+  if (!confirm("Are you sure you want to delete this product?")) return;
   fetch(API_URL, {
     method: "POST",
     body: JSON.stringify({ action: "delete", row: products[i].row || i + 2 })
@@ -507,6 +511,11 @@ function deleteProduct(i) {
 
   // Existing function (unchanged)
 function addProduct() {
+  if (!adminUnlocked) {
+  alert("Unlock admin first");
+  return;
+}
+
   // If you want silent add (no prompt), set this flag to true
   const silent = true; // ✅ change to false if you want prompts
 
@@ -545,6 +554,7 @@ function addProduct() {
 
 
   
+
 
 
 loadProducts();
