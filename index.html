@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v9.20</title>
+<title>My Shop Herabete Admin v9.21</title>
 
 <style>
 body {
@@ -244,6 +244,13 @@ if (user.uid === ADMIN_UID) {
 
 window.unlockAdmin = async () => {
 
+  const user = auth.currentUser;
+
+  if (!user || user.uid !== ADMIN_UID) {
+    alert("Not authorized ❌");
+    return;
+  }
+
   const password = prompt("Enter Admin Password");
   if (!password) return;
 
@@ -267,6 +274,7 @@ window.unlockAdmin = async () => {
     alert("Wrong password ❌");
   }
 };
+
 
 
 
