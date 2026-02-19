@@ -72,9 +72,15 @@ let products = [];
 
 function googleLogin() {
   signInWithPopup(auth, provider)
-    .then(result => { alert("Google Login Successful"); console.log(result.user); })
-    .catch(error => { alert(error.message); });
+    .then(result => {
+      // Do nothing here, UI will update automatically via onAuthStateChanged
+    })
+    .catch(error => {
+      // Optional: handle errors silently or log if needed
+      console.error("Login error:", error);
+    });
 }
+
 
 function logoutUser() {
   signOut(auth).then(() => {
