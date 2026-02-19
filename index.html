@@ -179,16 +179,25 @@ const ADMIN_UID = "mOP5jc6j28b8SIvXEyskqCtsQZG3";
 
   const provider = new GoogleAuthProvider();
 
-  function googleLogin() {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        alert("Google Login Successful");
-        console.log(result.user);
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-  };
+function googleLogin() {
+  signInWithPopup(auth, provider)
+    .then((result) => {
+      alert("Google Login Successful");
+      console.log(result.user);
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+}
+
+// Make it globally accessible
+window.googleLogin = googleLogin;
+
+// Now attach it to the button
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("loginBtn")
+    ?.addEventListener("click", googleLogin); // ✅ no parentheses
+});
 
   
 
@@ -596,7 +605,7 @@ if (!requireAdmin()) return;
   document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("loginBtn")
-    ?.addEventListener("click", googleLogin());
+    ?.addEventListener("click", googleLogin);
 
   document.getElementById("logoutBtn")
     ?.addEventListener("click", logoutUser);
