@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v9.16</title>
+<title>My Shop Herabete Admin v9.17</title>
 
 <style>
 body {
@@ -335,7 +335,7 @@ window.unlockAdmin = async () => {
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyxnxuEAgJCMA9y1y_GRkyYGg8TNbGsY3yAjRAipPVuGoocdA_XQnkIPQCbkrZOWmB5/exec";
 
-let adminUnlocked = false;
+
 let products = [];
 
 
@@ -344,14 +344,16 @@ let products = [];
 
 
 
-  
-function logoutAdmin() {
+  function logoutAdmin() {
   adminUnlocked = false;
   document.getElementById("adminBar").style.display = "none";
-  document.getElementById("adminBtn").style.display = "block";
+  document.getElementById("adminUnlockBtn").style.display = "block";
   renderProducts();
 }
 
+
+
+  
 function loadProducts() {
   fetch(API_URL)
     .then(res => res.json())
