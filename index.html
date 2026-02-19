@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v9.15</title>
+<title>My Shop Herabete Admin v9.16</title>
 
 <style>
 body {
@@ -242,6 +242,43 @@ if (user.uid === ADMIN_UID) {
 
 
 
+window.unlockAdmin = async () => {
+
+  const password = prompt("Enter Admin Password");
+  if (!password) return;
+
+  const user = auth.currentUser;
+  if (!user) {
+    alert("Not logged in");
+    return;
+  }
+
+  const token = await user.getIdToken();
+
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({
+      action: "verifyAdminPassword",
+      password: password
+    })
+  });
+
+  const result = await res.text();
+
+  if (result === "OK") {
+    adminUnlocked = true;
+    document.getElementById("adminBar").style.display = "block";
+    document.getElementById("adminUnlockBtn").style.display = "none";
+    renderProducts();
+    alert("Admin unlocked 🔥");
+  } else {
+    alert("Wrong password ❌");
+  }
+};
 
 
 
