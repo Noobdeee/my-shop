@@ -2,211 +2,280 @@
 <html>
 <head>
   <link rel="icon" href="data:,">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.24</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f5f6fa;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Shop Herabete Admin v9.25.0</title>
 
-    header {
-      background: #111;
-      color: white;
-      padding: 18px;
-      text-align: center;
-      font-size: 20px;
-      font-weight: 600;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f5f6fa;
+}
 
-    #adminBar {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: #222;
-      color: white;
-      padding: 10px;
-      text-align: center;
-      z-index: 9999;
-    }
+header {
+  background: #111;
+  color: white;
+  padding: 18px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+}
 
-    #adminBar button {
-      margin-left: 10px;
-      padding: 5px 12px;
-      border: none;
-      border-radius: 6px;
-      background: red;
-      color: white;
-    }
+#adminBar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #222;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  z-index: 9999;
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      padding: 20px;
-      margin-top: 10px;
-    }
+#adminBar button {
+  margin-left: 10px;
+  padding: 5px 12px;
+  border: none;
+  border-radius: 6px;
+  background: red;
+  color: white;
+}
 
-    .card {
-      background: white;
-      border-radius: 14px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-      overflow: hidden;
-      cursor: pointer;
-    }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 20px;
+  margin-top: 10px;
+}
 
-    .card img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      background: #eee;
-    }
+.card {
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-    .name {
-      font-weight: 600;
-      padding: 8px;
-      text-align: center;
-    }
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
 
-    .info {
-      padding: 12px;
-      display: none;
-    }
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  background: #eee;
+}
 
-    .card.show .info {
-      display: block;
-    }
+.card .name {
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  text-align: center;
+}
 
-    .info input,
-    .info textarea,
-    .info button {
-      width: 100%;
-      margin-top: 6px;
-      padding: 6px;
-    }
-  </style>
+.card .info {
+  padding: 12px;
+  display: none; 
+}
+
+.card.show .info {
+  display: block; 
+}
+
+.card .info .text {
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+.card .info input,
+.card .info textarea {
+  width: 100%;
+  margin-top: 6px;
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.card .info button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #111;
+  color: white;
+  font-weight: 600;
+}
+
+#adminBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 14px;
+  border-radius: 50%;
+  border: none;
+  background: #111;
+  color: white;
+  font-size: 18px;
+}
+
+#adminActions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+#adminActions button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  background: #111;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+</style>
+
+  
 </head>
 
-<body>
 
-<header>My Shop Heeraa-betee</header>
 
-<div id="userSection" style="display:none;">
-  <img id="userPhoto" width="35" height="35" style="border-radius:50%;">
-  <span id="userName"></span>
-  <button id="logoutBtn">Logout</button>
-</div>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { 
+    getAuth, 
+    GoogleAuthProvider, 
+    signInWithPopup,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-<button id="loginBtn">Login with Google</button>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCV432JfpHR3abZJXPDthNvH2jDMGLRcrM",
+    authDomain: "my-shop-app-dc042.firebaseapp.com",
+    projectId: "my-shop-app-dc042",
+    storageBucket: "my-shop-app-dc042.firebasestorage.app",
+    messagingSenderId: "393287049357",
+    appId: "1:393287049357:web:1460ddf82ddad440e2c2c4"
+  };
 
-<div id="adminBar">
-  Admin Mode: <b>ON</b>
-  <button id="adminOffBtn">OFF</button>
-  <button id="addProductBtn">➕ Add Product</button>
-</div>
 
-<button id="adminUnlockBtn" style="display:none;">🔐 Open Admin</button>
+    adminUnlocked = false;
 
-<div class="grid" id="productList"></div>
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+    
+const ADMIN_UID = "mOP5jc6j28b8SIvXEyskqCtsQZG3";
 
-<script type="module">
-/* ================= FIREBASE ================= */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCV432JfpHR3abZJXPDthNvH2jDMGLRcrM",
-  authDomain: "my-shop-app-dc042.firebaseapp.com",
-  projectId: "my-shop-app-dc042",
-  storageBucket: "my-shop-app-dc042.firebasestorage.app",
-  messagingSenderId: "393287049357",
-  appId: "1:393287049357:web:1460ddf82ddad440e2c2c4"
+  const provider = new GoogleAuthProvider();
+
+  function googleLogin() {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        alert("Google Login Successful");
+        console.log(result.user);
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
+
+  
+
+const logoutUser = () => {
+  signOut(auth);
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
 
-/* ================= CONFIG ================= */
-const ADMIN_UID = "mOP5jc6j28b8SIvXEyskqCtsQZG3";
-const API_URL = "https://script.google.com/macros/s/AKfycbyxnxuEAgJCMA9y1y_GRkyYGg8TNbGsY3yAjRAipPVuGoocdA_XQnkIPQCbkrZOWmB5/exec";
 
-/* ================= STATE ================= */
-let adminUnlocked = false;
-let products = [];
 
-/* ================= AUTH ================= */
-function googleLogin() {
-  signInWithPopup(auth, provider)
-    .catch(err => alert(err.message));
-}
+    onAuthStateChanged(auth, (user) => {
 
-function logoutUser() {
-  signOut(auth);
-}
+  const userSection = document.getElementById("userSection");
+  const loginBtn = document.getElementById("loginBtn");
+  const adminBar = document.getElementById("adminBar");
+  const adminUnlockBtn = document.getElementById("adminUnlockBtn");
 
-onAuthStateChanged(auth, (user) => {
+  // Reset admin state on every auth change
   adminUnlocked = false;
-  document.getElementById("adminBar").style.display = "none";
-  document.getElementById("adminUnlockBtn").style.display = "none";
+  adminBar.style.display = "none";
+  adminUnlockBtn.style.display = "none";
 
   if (user) {
-    document.getElementById("userSection").style.display = "flex";
-    document.getElementById("loginBtn").style.display = "none";
+
+    // Show user info
     document.getElementById("userPhoto").src = user.photoURL;
     document.getElementById("userName").textContent = user.displayName;
 
+    userSection.style.display = "flex";
+    loginBtn.style.display = "none";
+
+    // 🔒 Show unlock button only if correct UID
     if (user.uid === ADMIN_UID) {
-      document.getElementById("adminUnlockBtn").style.display = "block";
+      adminUnlockBtn.style.display = "block";
     }
+
   } else {
-    document.getElementById("userSection").style.display = "none";
-    document.getElementById("loginBtn").style.display = "block";
+
+    userSection.style.display = "none";
+    loginBtn.style.display = "block";
+
   }
 
-  loadProducts();
+  renderProducts();
 });
 
-/* ================= ADMIN ================= */
+
+
+
+    
+
 async function unlockAdmin() {
+
+
   const user = auth.currentUser;
-  if (!user || user.uid !== ADMIN_UID) return alert("Not authorized");
+
+  if (!user || user.uid !== ADMIN_UID) {
+    alert("Not authorized ❌");
+    return;
+  }
 
   const password = prompt("Enter Admin Password");
   if (!password) return;
 
   const res = await fetch(API_URL, {
     method: "POST",
-    body: JSON.stringify({ action: "login", password })
+    body: JSON.stringify({
+      action: "login",
+      password: password
+    })
   });
 
   const data = await res.json();
+
   if (data.success) {
     adminUnlocked = true;
     document.getElementById("adminBar").style.display = "block";
     document.getElementById("adminUnlockBtn").style.display = "none";
     renderProducts();
+    alert("Admin unlocked 🔥");
   } else {
-    alert("Wrong password");
+    alert("Wrong password ❌");
   }
-}
+};
 
-function logoutAdmin() {
-  adminUnlocked = false;
-  document.getElementById("adminBar").style.display = "none";
-  document.getElementById("adminUnlockBtn").style.display = "block";
-  renderProducts();
-}
+
+
 
 function requireAdmin() {
   if (!adminUnlocked) {
@@ -216,7 +285,81 @@ function requireAdmin() {
   return true;
 }
 
-/* ================= PRODUCTS ================= */
+
+
+
+    
+
+</script>
+
+
+
+
+
+
+
+
+  
+<body>
+
+<header>My Shop Heeraa-betee</header>
+
+
+ <div id="userSection" style="display:none;">
+  <img id="userPhoto" width="35" height="35" style="border-radius:50%;">
+  <span id="userName"></span>
+ <button id="logoutBtn">Logout</button>
+
+</div>
+  
+<button id="loginBtn">Login with Google</button>
+
+
+<div id="adminBar">
+  Admin Mode: <b>ON</b>
+ <button id="adminOffBtn">OFF</button>
+
+  <div id="adminActions">
+   <button id="addProductBtn">➕ Add Product</button>
+
+  </div>
+</div>
+
+<div class="grid" id="productList"></div>
+
+
+  
+<button id="adminUnlockBtn" style="display:none;">
+
+  🔐 Open Admin
+</button>
+
+
+  
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyxnxuEAgJCMA9y1y_GRkyYGg8TNbGsY3yAjRAipPVuGoocdA_XQnkIPQCbkrZOWmB5/exec";
+
+let products = [];
+let adminUnlocked = false;
+
+
+
+
+  
+
+
+
+  function logoutAdmin() {
+
+
+  document.getElementById("adminBar").style.display = "none";
+  document.getElementById("adminUnlockBtn").style.display = "block";
+  renderProducts();
+}
+
+
+
+  
 function loadProducts() {
   fetch(API_URL)
     .then(res => res.json())
@@ -226,6 +369,16 @@ function loadProducts() {
     });
 }
 
+function previewImage(event, i) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById(`preview-${i}`).src = e.target.result;
+  };
+  reader.readAsDataURL(event.target.files[0]);
+}
+
+
+// Render products
 function renderProducts() {
   const list = document.getElementById("productList");
   list.innerHTML = "";
@@ -234,61 +387,236 @@ function renderProducts() {
     const card = document.createElement("div");
     card.className = "card";
 
+    // Make card draggable in admin mode
+    if (adminUnlocked) {
+      card.setAttribute("draggable", true);
+
+      card.addEventListener("dragstart", e => {
+        e.dataTransfer.setData("text/plain", i); // store index
+      });
+
+      card.addEventListener("dragover", e => e.preventDefault());
+
+      card.addEventListener("drop", e => {
+        const fromIndex = parseInt(e.dataTransfer.getData("text/plain"));
+        const toIndex = i;
+
+        // ✅ Remove dragged item and insert at new position
+        const dragged = products.splice(fromIndex, 1)[0];
+        products.splice(toIndex, 0, dragged);
+
+        renderProducts(); // re-render grid
+
+        // ✅ Prepare new order for backend (serials = 1,2,3,…)
+        const orderData = products.map((p, idx) => ({
+          row: p.row,
+          id: p.id
+        }));
+
+        fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify({
+            action: "reorder", // your backend should handle "reorder" and update column A
+            order: orderData
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (!data.success) alert("Failed to reorder products in sheet");
+        })
+        .catch(err => console.error("Reorder error:", err));
+      });
+    }
+
     card.innerHTML = `
-      <img src="${p.image || ''}">
+      <img src="${p.image || ''}" id="preview-${i}">
       <div class="name">${p.name || ''}</div>
       <div class="info">
-        ${adminUnlocked ? `
-          <input value="${p.name || ''}" id="name-${i}">
-          <textarea id="description-${i}">${p.description || ''}</textarea>
-          <input value="${p.price || ''}" id="price-${i}">
-          <input value="${p.stock || ''}" id="stock-${i}">
-          <button onclick="saveProduct(${i})">Save</button>
-          <button onclick="deleteProduct(${i})">Delete</button>
+       ${adminUnlocked ? `
+          <input id="name-${i}" value="${p.name || ''}" placeholder="Name">
+          <textarea id="description-${i}" placeholder="Description">${p.description || ''}</textarea>
+          <label>Paste Image URL:</label>
+          <input id="imageUrl-${i}" value="${p.image || ''}" placeholder="https://...">
+          <label>Or choose file from device:</label>
+          <input type="file" id="file-${i}" onchange="previewImage(event, ${i})">
+          <input id="stock-${i}" value="${p.stock || ''}" placeholder="Stock">
+          <input id="price-${i}" value="${p.price || ''}" placeholder="Price">
+          <button onclick="event.stopPropagation(); saveProduct(${i})">💾 Save</button>
+          <button onclick="event.stopPropagation(); deleteProduct(${i})">🗑 Delete</button>
         ` : `
-          <p>${p.description || ''}</p>
-          <p>₹ ${p.price || ''}</p>
-          <p>Stock: ${p.stock || ''}</p>
+          <div class="text"><b>Description:</b> ${p.description || '-'}</div>
+          <div class="text"><b>Price:</b> ${p.price || '-'}</div>
+          <div class="text"><b>Stock:</b> ${p.stock || '-'}</div>
         `}
       </div>
     `;
 
-    card.onclick = () => card.classList.toggle("show");
+    // Toggle details only if clicked outside input/button
+    card.onclick = (e) => {
+      if (!e.target.closest('input, textarea, button, label')) {
+        card.classList.toggle("show");
+      }
+    };
+
     list.appendChild(card);
   });
 }
 
-window.saveProduct = function(i) {
-  if (!requireAdmin()) return;
+
+
+
+  
+
+
+
+
+  
+// Save product without closing card
+async function saveProduct(i) {
+if (!requireAdmin()) return;
+
+
+  const fileInput = document.getElementById(`file-${i}`);
+  const urlInput = document.getElementById(`imageUrl-${i}`);
+  let image = "";
+
+  if (urlInput && urlInput.value.trim() !== "") image = urlInput.value.trim();
+
+  if (fileInput && fileInput.files[0]) {
+    image = await new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = e => resolve(e.target.result);
+      reader.readAsDataURL(fileInput.files[0]);
+    });
+  }
 
   fetch(API_URL, {
     method: "POST",
     body: JSON.stringify({
       action: "update",
-      row: products[i].row,
+      row: products[i].row || i + 2,
       name: document.getElementById(`name-${i}`).value,
       description: document.getElementById(`description-${i}`).value,
+      stock: document.getElementById(`stock-${i}`).value,
       price: document.getElementById(`price-${i}`).value,
-      stock: document.getElementById(`stock-${i}`).value
+      image: image
     })
-  }).then(loadProducts);
-};
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      // Update local data and DOM
+      products[i].name = document.getElementById(`name-${i}`).value;
+      products[i].description = document.getElementById(`description-${i}`).value;
+      products[i].stock = document.getElementById(`stock-${i}`).value;
+      products[i].price = document.getElementById(`price-${i}`).value;
+      products[i].image = image;
+      document.getElementById(`preview-${i}`).src = image;
+      document.querySelectorAll('.card .name')[i].textContent = products[i].name;
+      alert("Saved Successfully!");
+    } else alert("Error saving product: " + data.error);
+  })
+  .catch(err => {
+    console.error("Error saving product:", err);
+    alert("Failed to save product. Check console for details.");
+  });
+}
 
-window.deleteProduct = function(i) {
-  if (!requireAdmin()) return;
-  if (!confirm("Delete product?")) return;
+
+
+  
+function deleteProduct(i) {
+ if (!requireAdmin()) return;
+
+
+  if (!confirm("Are you sure you want to delete this product?")) return;
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({ action: "delete", row: products[i].row || i + 2 })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      products.splice(i, 1); // remove from local array
+      renderProducts(); // re-render
+    } else alert("Error deleting product: " + data.error);
+  })
+  .catch(err => {
+    console.error("Error deleting product:", err);
+    alert("Failed to delete product.");
+  });
+}
+
+
+
+
+  // Existing function (unchanged)
+function addProduct() {
+if (!requireAdmin()) return;
+
+
+  // If you want silent add (no prompt), set this flag to true
+  const silent = true; // ✅ change to false if you want prompts
+
+  let name = "", price = "", stock = "", description = "";
+
+  if (!silent) {
+    name = prompt("Enter product name") || "";
+    price = prompt("Enter product price") || "";
+    stock = prompt("Enter product stock") || "";
+    description = prompt("Enter description") || "";
+  }
 
   fetch(API_URL, {
     method: "POST",
-    body: JSON.stringify({ action: "delete", row: products[i].row })
-  }).then(loadProducts);
-};
+    body: JSON.stringify({
+      action: "add",
+      name,
+      price,
+      stock,
+      description
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.success) {
+      if (!silent) {
+        alert("Product added with ID " + data.id);
+      }
+      loadProducts(); // reload grid to show new product
+    } else {
+      alert("Failed to add product: " + (data.error || ""));
+    }
+  })
+  .catch(err => console.error("Add product error:", err));
+}
 
-document.getElementById("loginBtn").onclick = googleLogin;
-document.getElementById("logoutBtn").onclick = logoutUser;
-document.getElementById("adminUnlockBtn").onclick = unlockAdmin;
-document.getElementById("adminOffBtn").onclick = logoutAdmin;
-document.getElementById("addProductBtn").onclick = () => alert("Use sheet to add");
+
+
+  document.addEventListener("DOMContentLoaded", () => {
+
+  document.getElementById("loginBtn")
+    ?.addEventListener("click", googleLogin());
+
+  document.getElementById("logoutBtn")
+    ?.addEventListener("click", logoutUser);
+
+  document.getElementById("adminUnlockBtn")
+    ?.addEventListener("click", unlockAdmin);
+
+  document.getElementById("adminOffBtn")
+    ?.addEventListener("click", logoutAdmin);
+
+  document.getElementById("addProductBtn")
+    ?.addEventListener("click", addProduct);
+
+});
+
+  
+
+
+
+loadProducts();
 </script>
 
 </body>
