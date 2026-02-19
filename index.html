@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v9.22</title>
+<title>My Shop Herabete Admin v9.23</title>
 
 <style>
 body {
@@ -177,7 +177,7 @@ const ADMIN_UID = "mOP5jc6j28b8SIvXEyskqCtsQZG3";
 
   const provider = new GoogleAuthProvider();
 
-   googleLogin = () => {
+  function googleLogin() {
     signInWithPopup(auth, provider)
       .then((result) => {
         alert("Google Login Successful");
@@ -188,7 +188,7 @@ const ADMIN_UID = "mOP5jc6j28b8SIvXEyskqCtsQZG3";
       });
   };
 
-   logoutUser = () => {
+  function logoutUser = () => {
     signOut(auth);
   };
 
@@ -237,7 +237,8 @@ const ADMIN_UID = "mOP5jc6j28b8SIvXEyskqCtsQZG3";
 
     
 
- unlockAdmin = async () => {
+async function unlockAdmin() {
+
 
   const user = auth.currentUser;
 
@@ -304,17 +305,20 @@ function requireAdmin() {
  <div id="userSection" style="display:none;">
   <img id="userPhoto" width="35" height="35" style="border-radius:50%;">
   <span id="userName"></span>
-  <button onclick="logoutUser()">Logout</button>
-</div>
+ <button id="logoutBtn">Logout</button>
 
-<button id="loginBtn" onclick="googleLogin()">Login with Google</button>
+</div>
+  
+<button id="loginBtn">Login with Google</button>
 
 
 <div id="adminBar">
   Admin Mode: <b>ON</b>
-  <button onclick="logoutAdmin()">OFF</button>
+ <button id="adminOffBtn">OFF</button>
+
   <div id="adminActions">
-    <button onclick="addProduct()">➕ Add Product</button>
+   <button id="addProductBtn">➕ Add Product</button>
+
   </div>
 </div>
 
@@ -322,7 +326,8 @@ function requireAdmin() {
 
 
   
-<button id="adminUnlockBtn" onclick="unlockAdmin()" style="display:none;">
+<button id="adminUnlockBtn" style="display:none;">
+
   🔐 Open Admin
 </button>
 
@@ -583,6 +588,26 @@ if (!requireAdmin()) return;
   .catch(err => console.error("Add product error:", err));
 }
 
+
+
+  document.addEventListener("DOMContentLoaded", () => {
+
+  document.getElementById("loginBtn")
+    ?.addEventListener("click", googleLogin);
+
+  document.getElementById("logoutBtn")
+    ?.addEventListener("click", logoutUser);
+
+  document.getElementById("adminUnlockBtn")
+    ?.addEventListener("click", unlockAdmin);
+
+  document.getElementById("adminOffBtn")
+    ?.addEventListener("click", logoutAdmin);
+
+  document.getElementById("addProductBtn")
+    ?.addEventListener("click", addProduct);
+
+});
 
   
 
