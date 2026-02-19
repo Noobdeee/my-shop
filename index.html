@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v9.23</title>
+<title>My Shop Herabete Admin v9.23.00</title>
 
 <style>
 body {
@@ -188,9 +188,11 @@ const ADMIN_UID = "mOP5jc6j28b8SIvXEyskqCtsQZG3";
       });
   };
 
-  function logoutUser = () => {
-    signOut(auth);
-  };
+    
+const logoutUser = () => {
+  signOut(auth);
+};
+window.logoutUser = logoutUser; // make it global
 
 
 
