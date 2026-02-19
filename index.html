@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v9.17</title>
+<title>My Shop Herabete Admin v9.18</title>
 
 <style>
 body {
@@ -167,7 +167,7 @@ header {
   };
 
 
-    let adminUnlocked = false;
+    window.adminUnlocked = false;
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -216,7 +216,8 @@ const adminUnlockBtn = document.getElementById("adminUnlockBtn");
 
 adminBar.style.display = "none";
 adminUnlockBtn.style.display = "none";
-adminUnlocked = false; // reset every login change
+window.adminUnlocked = false;
+ // reset every login change
 
 // 🔒 ADMIN CHECK
 if (user.uid === ADMIN_UID) {
@@ -233,7 +234,8 @@ if (user.uid === ADMIN_UID) {
 
     adminBar.style.display = "none";
     adminBtn.style.display = "none";
-    adminUnlocked = false;
+   window.adminUnlocked = false;
+
 
     renderProducts();
   }
@@ -270,7 +272,7 @@ window.unlockAdmin = async () => {
   const result = await res.text();
 
   if (result === "OK") {
-    adminUnlocked = true;
+    window.window.window.window.window.window.adminUnlocked = true;
     document.getElementById("adminBar").style.display = "block";
     document.getElementById("adminUnlockBtn").style.display = "none";
     renderProducts();
@@ -345,7 +347,8 @@ let products = [];
 
 
   function logoutAdmin() {
-  adminUnlocked = false;
+window.adminUnlocked = false;
+
   document.getElementById("adminBar").style.display = "none";
   document.getElementById("adminUnlockBtn").style.display = "block";
   renderProducts();
@@ -382,7 +385,7 @@ function renderProducts() {
     card.className = "card";
 
     // Make card draggable in admin mode
-    if (adminUnlocked) {
+    if (window.adminUnlocked) {
       card.setAttribute("draggable", true);
 
       card.addEventListener("dragstart", e => {
