@@ -4,7 +4,7 @@
   <link rel="icon" href="data:,">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v9.24.XXXXXXX</title>
+<title>My Shop Herabete Admin v9.24</title>
 
 <style>
 body {
@@ -179,25 +179,16 @@ const ADMIN_UID = "mOP5jc6j28b8SIvXEyskqCtsQZG3";
 
   const provider = new GoogleAuthProvider();
 
-function googleLogin() {
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      alert("Google Login Successful");
-      console.log(result.user);
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
-}
-
-// Make it globally accessible
-window.googleLogin = googleLogin;
-
-// Now attach it to the button
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("loginBtn")
-    ?.addEventListener("click", googleLogin); // ✅ no parentheses
-});
+  function googleLogin() {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        alert("Google Login Successful");
+        console.log(result.user);
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
 
   
 
@@ -605,7 +596,7 @@ if (!requireAdmin()) return;
   document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("loginBtn")
-    ?.addEventListener("click", googleLogin);
+    ?.addEventListener("click", googleLogin());
 
   document.getElementById("logoutBtn")
     ?.addEventListener("click", logoutUser);
