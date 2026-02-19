@@ -2,15 +2,14 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v9.23.3</title>
-
+<title>My Shop Herabete Admin v9.23.4</title>
+<link rel="icon" href="favicon.ico">
 <style>
 body {
   margin: 0;
   font-family: 'Segoe UI', Arial, sans-serif;
   background: #f5f6fa;
 }
-
 header {
   background: #111;
   color: white;
@@ -19,7 +18,6 @@ header {
   font-size: 20px;
   font-weight: 600;
 }
-
 #adminBar {
   display: none;
   position: fixed;
@@ -32,7 +30,6 @@ header {
   text-align: center;
   z-index: 9999;
 }
-
 #adminBar button {
   margin-left: 10px;
   padding: 5px 12px;
@@ -41,7 +38,6 @@ header {
   background: red;
   color: white;
 }
-
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -49,7 +45,6 @@ header {
   padding: 20px;
   margin-top: 10px;
 }
-
 .card {
   background: white;
   border-radius: 14px;
@@ -58,40 +53,33 @@ header {
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
 .card:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(0,0,0,0.12);
 }
-
 .card img {
   width: 100%;
   height: 200px;
   object-fit: cover;
   background: #eee;
 }
-
 .card .name {
   font-weight: 600;
   font-size: 16px;
   padding: 8px 12px;
   text-align: center;
 }
-
 .card .info {
   padding: 12px;
   display: none; 
 }
-
 .card.show .info {
   display: block; 
 }
-
 .card .info .text {
   margin-top: 6px;
   line-height: 1.4;
 }
-
 .card .info input,
 .card .info textarea {
   width: 100%;
@@ -100,7 +88,6 @@ header {
   border: 1px solid #ddd;
   border-radius: 6px;
 }
-
 .card .info button {
   width: 100%;
   margin-top: 8px;
@@ -111,7 +98,6 @@ header {
   color: white;
   font-weight: 600;
 }
-
 #adminBtn {
   position: fixed;
   bottom: 20px;
@@ -123,14 +109,12 @@ header {
   color: white;
   font-size: 18px;
 }
-
 #adminActions {
   display: flex;
   justify-content: center;
   gap: 10px;
   margin-bottom: 10px;
 }
-
 #adminActions button {
   padding: 8px 16px;
   border-radius: 6px;
@@ -144,7 +128,6 @@ header {
 </head>
 
 <body>
-
 <header>My Shop Heeraa-betee</header>
 
 <div id="userSection" style="display:none;">
@@ -152,7 +135,7 @@ header {
   <span id="userName"></span>
   <button id="logoutBtn">Logout</button>
 </div>
-  
+
 <button id="loginBtn">Login with Google</button>
 
 <div id="adminBar">
@@ -171,7 +154,7 @@ header {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-// ====== Firebase Config ======
+// ===== Firebase Config =====
 const firebaseConfig = {
   apiKey: "AIzaSyCV432JfpHR3abZJXPDthNvH2jDMGLRcrM",
   authDomain: "my-shop-app-dc042.firebaseapp.com",
@@ -191,7 +174,7 @@ let products = [];
 
 const API_URL = "https://script.google.com/macros/s/AKfycbyxnxuEAgJCMA9y1y_GRkyYGg8TNbGsY3yAjRAipPVuGoocdA_XQnkIPQCbkrZOWmB5/exec";
 
-// ====== Login / Logout ======
+// ===== Login / Logout =====
 function googleLogin() {
   signInWithPopup(auth, provider)
     .then(result => { alert("Google Login Successful"); console.log(result.user); })
@@ -204,7 +187,7 @@ function logoutUser() {
 }
 window.logoutUser = logoutUser;
 
-// ====== Admin Unlock ======
+// ===== Admin Unlock =====
 async function unlockAdmin() {
   const user = auth.currentUser;
   if (!user || user.uid !== ADMIN_UID) { alert("Not authorized ❌"); return; }
@@ -234,7 +217,7 @@ function logoutAdmin() {
   renderProducts();
 }
 
-// ====== Product Handling ======
+// ===== Product Handling =====
 function loadProducts() {
   fetch(API_URL)
     .then(res => res.json())
@@ -273,8 +256,9 @@ function renderProducts() {
       });
     }
 
+    const imgSrc = p.image || 'https://via.placeholder.com/300x200?text=No+Image';
     card.innerHTML = `
-      <img src="${p.image || ''}" id="preview-${i}">
+      <img src="${imgSrc}" id="preview-${i}">
       <div class="name">${p.name || ''}</div>
       <div class="info">
         ${adminUnlocked ? `
@@ -295,7 +279,6 @@ function renderProducts() {
         `}
       </div>
     `;
-
     card.onclick = e => { if (!e.target.closest('input, textarea, button, label')) card.classList.toggle("show"); };
     list.appendChild(card);
   });
@@ -326,21 +309,19 @@ async function saveProduct(i) {
       price: document.getElementById(`price-${i}`).value,
       image
     })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      products[i].name = document.getElementById(`name-${i}`).value;
-      products[i].description = document.getElementById(`description-${i}`).value;
-      products[i].stock = document.getElementById(`stock-${i}`).value;
-      products[i].price = document.getElementById(`price-${i}`).value;
-      products[i].image = image;
-      document.getElementById(`preview-${i}`).src = image;
-      document.querySelectorAll('.card .name')[i].textContent = products[i].name;
-      alert("Saved Successfully!");
-    } else alert("Error saving product: " + data.error);
-  })
-  .catch(err => { console.error("Error saving product:", err); alert("Failed to save product."); });
+  }).then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        products[i].name = document.getElementById(`name-${i}`).value;
+        products[i].description = document.getElementById(`description-${i}`).value;
+        products[i].stock = document.getElementById(`stock-${i}`).value;
+        products[i].price = document.getElementById(`price-${i}`).value;
+        products[i].image = image;
+        document.getElementById(`preview-${i}`).src = image;
+        document.querySelectorAll('.card .name')[i].textContent = products[i].name;
+        alert("Saved Successfully!");
+      } else alert("Error saving product: " + data.error);
+    }).catch(err => { console.error("Error saving product:", err); alert("Failed to save product."); });
 }
 
 function deleteProduct(i) {
@@ -356,15 +337,13 @@ function addProduct() {
   if (!requireAdmin()) return;
   const silent = true;
   let name="", price="", stock="", description="";
-  fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({ action:"add", name, price, stock, description })
-  }).then(r => r.json())
+  fetch(API_URL, { method: "POST", body: JSON.stringify({ action:"add", name, price, stock, description }) })
+    .then(r => r.json())
     .then(d => { if(d.success) loadProducts(); else alert("Failed to add product: " + (d.error||"")); })
     .catch(err => console.error("Add product error:", err));
 }
 
-// ====== Event Listeners ======
+// ===== Event Listeners =====
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("loginBtn")?.addEventListener("click", googleLogin);
   document.getElementById("logoutBtn")?.addEventListener("click", logoutUser);
@@ -373,7 +352,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("addProductBtn")?.addEventListener("click", addProduct);
 });
 
-// ====== Auth State ======
+// ===== Auth State =====
 onAuthStateChanged(auth, user => {
   const userSection = document.getElementById("userSection");
   const loginBtn = document.getElementById("loginBtn");
@@ -398,9 +377,9 @@ onAuthStateChanged(auth, user => {
   renderProducts();
 });
 
-// ====== Initial Load ======
+// ===== Initial Load =====
 loadProducts();
-</script>
 
+</script>
 </body>
 </html>
