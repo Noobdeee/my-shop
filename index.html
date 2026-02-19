@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Shop Herabete Admin v9.13</title>
+<title>My Shop Herabete Admin v9.14</title>
 
 <style>
 body {
@@ -168,6 +168,9 @@ header {
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+    
+const ADMIN_UID = "mOP5jc6j28b8SIvXEyskqCtsQZG3";
+
 
   const provider = new GoogleAuthProvider();
 
@@ -185,22 +188,62 @@ header {
   window.logoutUser = () => {
     signOut(auth);
   };
+
+    
 onAuthStateChanged(auth, (user) => {
+
   const userSection = document.getElementById("userSection");
   const loginBtn = document.getElementById("loginBtn");
+  const adminBar = document.getElementById("adminBar");
+  const adminBtn = document.getElementById("adminBtn");
 
   if (user) {
+
     document.getElementById("userPhoto").src = user.photoURL;
     document.getElementById("userName").textContent = user.displayName;
 
     userSection.style.display = "flex";
     loginBtn.style.display = "none";
 
+    // 🔒 ADMIN CHECK
+    if (user.uid === ADMIN_UID) {
+      adminBar.style.display = "block";
+      adminBtn.style.display = "none";
+      adminMode = true;
+    } else {
+      adminBar.style.display = "none";
+      adminBtn.style.display = "none"; // hide gear button from customers
+      adminMode = false;
+    }
+
+    renderProducts();
+
   } else {
+
     userSection.style.display = "none";
     loginBtn.style.display = "block";
+
+    adminBar.style.display = "none";
+    adminBtn.style.display = "none";
+    adminMode = false;
+
+    renderProducts();
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
 </script>
 
@@ -244,6 +287,9 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyxnxuEAgJCMA9y1y_GRkyY
 let adminMode = false;
 let products = [];
 
+
+
+  
 function openAdmin() {
   const pass = prompt("Enter Admin Password");
   if (!pass) return;
@@ -265,6 +311,10 @@ function openAdmin() {
   });
 }
 
+
+
+
+  
 function logoutAdmin() {
   adminMode = false;
   document.getElementById("adminBar").style.display = "none";
