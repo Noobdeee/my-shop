@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.27.26</title>
+  <title>My Shop Herabete Admin v9.27.27</title>
 
   <style> 
     body {
@@ -837,7 +837,6 @@ window.deleteProduct = function(i) {
   }).then(loadProducts);
 };
 
-
 window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("theme");
   const savedColor = localStorage.getItem("customColor");
@@ -847,33 +846,40 @@ window.addEventListener("DOMContentLoaded", () => {
 
   if (!savedTheme) return;
 
-  // **Set dropdown silently**
-  select.value = savedTheme; // do NOT trigger changeTheme()
+  // Set dropdown silently
+  select.value = savedTheme;
 
   if (savedTheme === "night") {
     document.body.classList.add("night");
   }
 
   if (savedTheme === "custom" && savedColor) {
-    // Apply the saved color
     document.body.classList.remove("night");
     document.body.style.background = savedColor;
 
-    // Auto text color
     const r = parseInt(savedColor.substr(1,2),16);
     const g = parseInt(savedColor.substr(3,2),16);
     const b = parseInt(savedColor.substr(5,2),16);
     const brightness = (r*299 + g*587 + b*114)/1000;
     document.body.style.color = brightness > 128 ? "#000" : "#fff";
 
-    // Update color picker preview
+    // Update picker preview
     colorPicker.value = savedColor;
     colorPreview.style.background = savedColor;
+
+    // ✅ Do NOT open the modal automatically
+    document.getElementById("customThemeModal").style.display = "none";
   }
 });
 
-  
 
+
+
+
+
+
+
+  
 
 const customModal = document.getElementById("customThemeModal");
 const colorInput = document.getElementById("customColor");
