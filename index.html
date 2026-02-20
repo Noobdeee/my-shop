@@ -152,35 +152,59 @@ input:checked + .slider {
 input:checked + .slider::before {
   transform: translateX(34px);
 }
-
-/* ===== NIGHT MODE ===== */
+/* ===== NIGHT MODE FULL DARK ===== */
 
 body {
   transition: background 0.4s ease, color 0.4s ease;
 }
 
 body.night {
-  background: #121212;
-  color: #ffffff;
+  background: #0f172a !important;
+  color: #ffffff !important;
 }
 
+/* Header */
+body.night header {
+  background: #020617 !important;
+  color: #ffffff !important;
+}
+
+/* Admin bar */
+body.night #adminBar {
+  background: #111827 !important;
+}
+
+/* Login button */
+body.night #loginBtn {
+  background: #1e293b !important;
+  color: white !important;
+}
+
+/* Cards */
 body.night .card {
-  background: #1e1e1e;
-  color: #ffffff;
+  background: #1e293b !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6) !important;
 }
 
+/* Images */
+body.night .card img {
+  background: #0f172a !important;
+}
+
+/* Inputs & textarea */
 body.night input,
 body.night textarea {
-  background: #2a2a2a;
-  color: white;
-  border: 1px solid #444;
+  background: #0f172a !important;
+  color: #ffffff !important;
+  border: 1px solid #334155 !important;
 }
 
+/* Buttons */
 body.night button {
-  background: #333;
-  color: white;
+  background: #334155 !important;
+  color: #ffffff !important;
 }
-
   </style>
 </head>
 
