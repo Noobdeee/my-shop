@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.26.09</title>
+  <title>My Shop Herabete Admin v9.26.10</title>
 
   <style> 
     body {
@@ -299,11 +299,23 @@ function renderProducts() {
 
       card.style.touchAction = "none"; // important for mobile
 
-      card.addEventListener("pointerdown", (e) => {
-        dragIndex = i;
-        card.classList.add("dragging");
-        card.setPointerCapture(e.pointerId);
-      });
+  card.addEventListener("pointerdown", (e) => {
+
+  // ❌ Do NOT drag if clicking inside form elements
+  if (
+    e.target.closest("input") ||
+    e.target.closest("textarea") ||
+    e.target.closest("button") ||
+    e.target.closest("label")
+  ) {
+    return;
+  }
+
+  dragIndex = i;
+  card.classList.add("dragging");
+  card.setPointerCapture(e.pointerId);
+});
+
 
       card.addEventListener("pointermove", (e) => {
         if (dragIndex === null) return;
@@ -364,11 +376,19 @@ function renderProducts() {
 `;
 
 
-    card.addEventListener("click", (e) => {
-      if (!e.target.closest("input, textarea, button")) {
-        card.classList.toggle("show");
-      }
-    });
+   card.addEventListener("click", (e) => {
+  if (
+    e.target.closest("input") ||
+    e.target.closest("textarea") ||
+    e.target.closest("button") ||
+    e.target.closest("label")
+  ) {
+    return; // do nothing when editing
+  }
+
+  card.classList.toggle("show");
+});
+
 
     list.appendChild(card);
   });
