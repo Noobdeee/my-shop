@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.27.15</title>
+  <title>My Shop Herabete Admin v9.27.16</title>
 
   <style> 
     body {
@@ -100,10 +100,11 @@
 
 .theme-switch {
   position: fixed;
-  top: 20px;
+  top: 80px;          /* move below admin bar */
   right: 20px;
-  z-index: 999;
+  z-index: 10000;     /* higher than admin bar */
 }
+
 
 .theme-switch input {
   display: none;
@@ -217,92 +218,6 @@ body.night button {
 <div class="grid" id="productList"></div>
 
 <script type="module">
-  /* ===== THEME SWITCH ===== */
-
-.theme-switch {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 999;
-}
-
-.theme-switch input {
-  display: none;
-}
-
-.slider {
-  width: 70px;
-  height: 35px;
-  background: #ddd;
-  border-radius: 50px;
-  position: relative;
-  cursor: pointer;
-  transition: background 0.4s ease;
-  display: flex;
-  align-items: center;
-  padding: 0 5px;
-}
-
-.slider::before {
-  content: "";
-  position: absolute;
-  width: 28px;
-  height: 28px;
-  background: white;
-  border-radius: 50%;
-  top: 3.5px;
-  left: 4px;
-  transition: transform 0.4s ease;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-}
-
-.icon {
-  font-size: 14px;
-  z-index: 2;
-}
-
-.sun {
-  margin-left: auto;
-}
-
-input:checked + .slider {
-  background: #222;
-}
-
-input:checked + .slider::before {
-  transform: translateX(34px);
-}
-
-/* ===== NIGHT MODE ===== */
-
-body {
-  transition: background 0.4s ease, color 0.4s ease;
-}
-
-body.night {
-  background: #121212;
-  color: #ffffff;
-}
-
-body.night .card {
-  background: #1e1e1e;
-  color: #ffffff;
-}
-
-body.night input,
-body.night textarea {
-  background: #2a2a2a;
-  color: white;
-  border: 1px solid #444;
-}
-
-body.night button {
-  background: #333;
-  color: white;
-}
-
-
-
 
 
 
