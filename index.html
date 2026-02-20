@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.26.07</title>
+  <title>My Shop Herabete Admin v9.26.08</title>
 
   <style>
     body {
@@ -65,11 +65,11 @@
       object-fit: cover;
       background: #eee;
     }
-.card.dragging {
-  opacity: 0.7;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-  cursor: grabbing;
+
+    .card.dragging {
+  opacity: 0.6;
 }
+
 
     .name {
       font-weight: 600;
@@ -272,67 +272,68 @@ function loadProducts() {
     });
 }
 
+
+
+
+
+
+
+
+
+
+
+
+  
 function renderProducts() {
   const list = document.getElementById("productList");
   list.innerHTML = "";
+
+  let dragIndex = null;
 
   products.forEach((p, i) => {
     const card = document.createElement("div");
     card.className = "card";
 
-    /* ================= ADVANCED GRID DRAG ================= */
+    /* ===== SMART GRID DRAG SYSTEM ===== */
     if (adminUnlocked) {
 
-      let isDragging = false;
-      let offsetX = 0;
-      let offsetY = 0;
+      card.style.touchAction = "none"; // important for mobile
 
       card.addEventListener("pointerdown", (e) => {
-        isDragging = true;
-
-        const rect = card.getBoundingClientRect();
-        offsetX = e.clientX - rect.left;
-        offsetY = e.clientY - rect.top;
-
+        dragIndex = i;
         card.classList.add("dragging");
-        card.style.position = "fixed";
-        card.style.left = rect.left + "px";
-        card.style.top = rect.top + "px";
-        card.style.width = rect.width + "px";
-        card.style.zIndex = "1000";
-
         card.setPointerCapture(e.pointerId);
       });
 
       card.addEventListener("pointermove", (e) => {
-        if (!isDragging) return;
-
-        card.style.left = (e.clientX - offsetX) + "px";
-        card.style.top = (e.clientY - offsetY) + "px";
-      });
-
-      card.addEventListener("pointerup", (e) => {
-        if (!isDragging) return;
-        isDragging = false;
-
-        card.classList.remove("dragging");
+        if (dragIndex === null) return;
 
         const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
         const targetCard = elementBelow?.closest(".card");
 
-        if (targetCard && targetCard !== card) {
-          const cards = Array.from(document.querySelectorAll(".card"));
-          const fromIndex = cards.indexOf(card);
-          const toIndex = cards.indexOf(targetCard);
+        if (!targetCard) return;
 
-          const draggedItem = products.splice(fromIndex, 1)[0];
-          products.splice(toIndex, 0, draggedItem);
+        const cards = Array.from(document.querySelectorAll(".card"));
+        const overIndex = cards.indexOf(targetCard);
+
+        if (overIndex !== -1 && overIndex !== dragIndex) {
+
+          const draggedItem = products.splice(dragIndex, 1)[0];
+          products.splice(overIndex, 0, draggedItem);
+
+          dragIndex = overIndex;
+
+          renderProducts();
         }
+      });
 
-        renderProducts();
+      card.addEventListener("pointerup", () => {
+        dragIndex = null;
+        document.querySelectorAll(".card")
+          .forEach(c => c.classList.remove("dragging"));
       });
     }
-    /* ================= END GRID DRAG ================= */
+    /* ===== END DRAG SYSTEM ===== */
 
 
     card.innerHTML = `
