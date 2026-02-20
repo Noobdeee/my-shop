@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.24.00</title>
+  <title>My Shop Herabete Admin v9.26.02</title>
 
   <style>
     body {
@@ -226,6 +226,8 @@ function loadProducts() {
     });
 }
 
+
+  
 function renderProducts() {
   const list = document.getElementById("productList");
   list.innerHTML = "";
@@ -258,6 +260,9 @@ function renderProducts() {
   });
 }
 
+
+
+  
 window.saveProduct = function(i) {
   if (!requireAdmin()) return;
 
