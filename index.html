@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.27.11</title>
+  <title>My Shop Herabete Admin v9.27.12</title>
 
   <style> 
     body {
@@ -460,10 +460,19 @@ if (card.classList.contains("show")) {
   .then(res => res.json())
   .then(data => {
     if (data.success) {
-     alert("Saved Successfully ✅");
+    
+// Update local data instantly
+products[i].name = document.getElementById(`name-${i}`).value;
+products[i].description = document.getElementById(`description-${i}`).value;
+products[i].price = document.getElementById(`price-${i}`).value;
+products[i].stock = document.getElementById(`stock-${i}`).value;
+products[i].image = image;
 
-// Reload fresh data but preserve open cards
-loadProducts();
+// Re-render instantly (preserves open cards)
+renderProducts();
+
+alert("Saved Successfully ✅");
+
 
     } else {
       alert("Save failed ❌");
