@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.26.05</title>
+  <title>My Shop Herabete Admin v9.26.07</title>
 
   <style>
     body {
@@ -272,8 +272,6 @@ function loadProducts() {
     });
 }
 
-
-  
 function renderProducts() {
   const list = document.getElementById("productList");
   list.innerHTML = "";
@@ -282,36 +280,42 @@ function renderProducts() {
     const card = document.createElement("div");
     card.className = "card";
 
-    /* ================= DRAG SYSTEM (WORKS ON LAPTOP + PHONE) ================= */
+    /* ================= ADVANCED GRID DRAG ================= */
     if (adminUnlocked) {
 
-      let currentCard = null;
-      let startY = 0;
+      let isDragging = false;
+      let offsetX = 0;
+      let offsetY = 0;
 
       card.addEventListener("pointerdown", (e) => {
-        currentCard = card;
-        startY = e.clientY;
+        isDragging = true;
+
+        const rect = card.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
 
         card.classList.add("dragging");
-        card.style.position = "relative";
+        card.style.position = "fixed";
+        card.style.left = rect.left + "px";
+        card.style.top = rect.top + "px";
+        card.style.width = rect.width + "px";
         card.style.zIndex = "1000";
 
         card.setPointerCapture(e.pointerId);
       });
 
       card.addEventListener("pointermove", (e) => {
-        if (!currentCard) return;
+        if (!isDragging) return;
 
-        const moveY = e.clientY - startY;
-        card.style.transform = `translateY(${moveY}px)`;
+        card.style.left = (e.clientX - offsetX) + "px";
+        card.style.top = (e.clientY - offsetY) + "px";
       });
 
       card.addEventListener("pointerup", (e) => {
-        if (!currentCard) return;
+        if (!isDragging) return;
+        isDragging = false;
 
         card.classList.remove("dragging");
-        card.style.transform = "";
-        card.style.zIndex = "";
 
         const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
         const targetCard = elementBelow?.closest(".card");
@@ -325,11 +329,10 @@ function renderProducts() {
           products.splice(toIndex, 0, draggedItem);
         }
 
-        currentCard = null;
         renderProducts();
       });
     }
-    /* ================= END DRAG SYSTEM ================= */
+    /* ================= END GRID DRAG ================= */
 
 
     card.innerHTML = `
@@ -361,6 +364,15 @@ function renderProducts() {
   });
 }
 
+
+
+
+
+
+
+
+
+  
 
 
 
