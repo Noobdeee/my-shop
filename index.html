@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.26.03</title>
+  <title>My Shop Herabete Admin v9.26.04</title>
 
   <style>
     body {
@@ -296,7 +296,12 @@ function renderProducts() {
       </div>
     `;
 
-    card.onclick = () => card.classList.toggle("show");
+    card.addEventListener("click", (e) => {
+  if (!e.target.closest("input, textarea, button")) {
+    card.classList.toggle("show");
+  }
+});
+
     list.appendChild(card);
   });
 }
