@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.27.18</title>
+  <title>My Shop Herabete Admin v9.27.19</title>
 
   <style> 
     body {
@@ -97,6 +97,35 @@
 
 
     /* ===== THEME SWITCH ===== */
+
+    .theme-panel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#themeSelect {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+#customColor {
+  width: 40px;
+  height: 40px;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 0;
+}
+
+/* Custom mode dynamic styling */
+body.custom {
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+    
 
 .theme-switch {
   position: fixed;
@@ -205,6 +234,10 @@ body.night button {
   background: #334155 !important;
   color: #ffffff !important;
 }
+
+
+
+    
   </style>
 </head>
 
@@ -230,13 +263,25 @@ body.night button {
 
 <button id="adminUnlockBtn" style="display:none;">🔐 Open Admin</button>
 
-  <div class="theme-switch">
-  <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
-  <label for="themeToggle" class="slider">
-    <span class="icon sun">☀️</span>
-    <span class="icon moon">🌙</span>
-  </label>
-  </div>
+
+
+
+
+  
+  <div class="theme-panel">
+  <select id="themeSelect" onchange="changeTheme()">
+    <option value="day">☀ Day</option>
+    <option value="night">🌙 Night</option>
+    <option value="custom">🎨 Custom</option>
+  </select>
+
+  <input type="color" id="customColor" style="display:none;" onchange="applyCustomColor()">
+</div>
+
+
+
+
+  
 
   
 <div class="grid" id="productList"></div>
