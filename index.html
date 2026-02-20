@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.27.23</title>
+  <title>My Shop Herabete Admin v9.27.24</title>
 
   <style> 
     body {
@@ -230,7 +230,107 @@ body.night button {
   color: #ffffff !important;
 }
 
-    
+ /* Modal overlay */
+.theme-modal {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+}
+
+/* Modal box */
+.theme-modal-content {
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 15px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  animation: fadeIn 0.3s ease;
+}
+
+.theme-modal-content h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Color picker + preview */
+.color-picker-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+#customColor {
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+#customColor:hover {
+  transform: scale(1.1);
+}
+
+#colorPreview {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid #333;
+  background: #ff0000;
+}
+
+/* Buttons */
+.theme-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.theme-buttons button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+#saveCustomThemeBtn {
+  background: #22c55e;
+  color: white;
+}
+
+#saveCustomThemeBtn:hover {
+  background: #16a34a;
+}
+
+#cancelCustomThemeBtn {
+  background: #ef4444;
+  color: white;
+}
+
+#cancelCustomThemeBtn:hover {
+  background: #b91c1c;
+}
+
+/* Fade in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9);}
+  to { opacity: 1; transform: scale(1);}
+}   
 
 
 
@@ -287,19 +387,22 @@ body.night button {
 
 
 
-
-  
-<div id="customThemeModal" class="theme-modal">
+<!-- CUSTOM THEME MODAL -->
+<div id="customThemeModal" class="theme-modal" style="display:none;">
   <div class="theme-modal-content">
     <h3>Choose Your Custom Theme</h3>
 
-    <input type="color" id="customColor">
+    <div class="color-picker-wrapper">
+      <input type="color" id="customColor" value="#ff0000">
+      <div id="colorPreview"></div>
+    </div>
 
-    <button id="saveCustomThemeBtn">💾 Save Theme</button>
-    <button onclick="closeThemeModal()">Cancel</button>
+    <div class="theme-buttons">
+      <button id="saveCustomThemeBtn">💾 Save Theme</button>
+      <button id="cancelCustomThemeBtn">❌ Cancel</button>
+    </div>
   </div>
 </div>
-
 
 
 
@@ -771,17 +874,27 @@ window.deleteProduct = function(i) {
   
 
 
+const customModal = document.getElementById("customThemeModal");
+const colorInput = document.getElementById("customColor");
+const colorPreview = document.getElementById("colorPreview");
+const saveBtn = document.getElementById("saveCustomThemeBtn");
+const cancelBtn = document.getElementById("cancelCustomThemeBtn");
 
-  document.getElementById("saveCustomThemeBtn").addEventListener("click", () => {
-  const color = document.getElementById("customColor").value;
+// Update preview in real time
+colorInput.addEventListener("input", () => {
+  colorPreview.style.background = colorInput.value;
+});
 
-  // Calculate brightness
+// Save theme
+saveBtn.addEventListener("click", () => {
+  const color = colorInput.value;
+
+  // Calculate brightness for text color
   const r = parseInt(color.substr(1,2),16);
   const g = parseInt(color.substr(3,2),16);
   const b = parseInt(color.substr(5,2),16);
-
-  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  const textColor = brightness > 128 ? "#000000" : "#ffffff";
+  const brightness = (r*299 + g*587 + b*114)/1000;
+  const textColor = brightness>128 ? "#000" : "#fff";
 
   document.body.classList.remove("night");
   document.body.style.background = color;
@@ -790,9 +903,17 @@ window.deleteProduct = function(i) {
   localStorage.setItem("theme", "custom");
   localStorage.setItem("customColor", color);
 
-  alert("Custom theme saved ✅");
+  customModal.style.display = "none";
 });
 
+// Cancel button
+cancelBtn.addEventListener("click", () => {
+  customModal.style.display = "none";
+});
+
+
+
+  
 
   
 
