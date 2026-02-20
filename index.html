@@ -119,7 +119,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import {
   getAuth,
   GoogleAuthProvider,
-  signInWithPopUp,
+  signInWithPopup,
   onAuthStateChanged,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -147,7 +147,7 @@ let products = [];
 
 /* ================= AUTH ================= */
 function googleLogin() {
-  signInWithPopUp(auth, provider)
+  signInWithPopup(auth, provider)
     .catch(err => alert(err.message));
 }
 
