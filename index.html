@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.27.31</title>
+  <title>My Shop Herabete Admin v9.27.32</title>
 
   <style> 
     body {
@@ -434,11 +434,7 @@ document.getElementById("saveCustomThemeBtn").addEventListener("click", () => {
 
 
 
-
-
-
-
-
+// Elements
 const themeSelect = document.getElementById("themeSelect");
 const customModal = document.getElementById("customThemeModal");
 const colorInput = document.getElementById("customColor");
@@ -466,17 +462,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
     colorInput.value = savedColor;
     colorPreview.style.background = savedColor;
-
-    themeSelect.value = "custom"; // set dropdown silently
+    themeSelect.value = "custom"; 
   } else {
     themeSelect.value = "day";
   }
 });
 
-// Open modal only when user actively selects Custom
+// Dropdown change
 themeSelect.addEventListener("change", () => {
   const theme = themeSelect.value;
-
   if (theme === "day") {
     document.body.classList.remove("night");
     document.body.style.background = "";
@@ -488,11 +482,11 @@ themeSelect.addEventListener("change", () => {
     document.body.style.color = "";
     localStorage.setItem("theme", "night");
   } else if (theme === "custom") {
-    customModal.style.display = "flex"; // only open modal on user action
+    customModal.style.display = "flex";
   }
 });
 
-// Update preview in real time
+// Live preview of color
 colorInput.addEventListener("input", () => {
   colorPreview.style.background = colorInput.value;
 });
@@ -500,7 +494,6 @@ colorInput.addEventListener("input", () => {
 // Save custom theme
 saveBtn.addEventListener("click", () => {
   const color = colorInput.value;
-
   const r = parseInt(color.substr(1,2),16);
   const g = parseInt(color.substr(3,2),16);
   const b = parseInt(color.substr(5,2),16);
@@ -517,17 +510,25 @@ saveBtn.addEventListener("click", () => {
   customModal.style.display = "none";
 });
 
-// Cancel button
+// Cancel modal
 cancelBtn.addEventListener("click", () => {
   customModal.style.display = "none";
-  // revert dropdown to previous saved theme
   const savedTheme = localStorage.getItem("theme") || "day";
   themeSelect.value = savedTheme;
 });
+
+
+
+
+
+
+
   
 
 
 
+
+  
 
   
 
