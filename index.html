@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.26.00</title>
+  <title>My Shop Herabete Admin v9.24.00</title>
 
   <style>
     body {
@@ -45,7 +45,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeatrepeat(auto-fit, minmax(160px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 20px;
       padding: 20px;
       margin-top: 10px;
@@ -173,10 +173,10 @@ onAuthStateChanged(auth, (user) => {
     document.getElementById("userSection").style.display = "none";
     document.getElementById("loginBtn").style.display = "block";
   }
-});
- loadProducts();
 
-  
+  loadProducts();
+});
+
 /* ================= ADMIN ================= */
 async function unlockAdmin() {
   const user = auth.currentUser;
@@ -235,7 +235,7 @@ function renderProducts() {
     card.className = "card";
 
     card.innerHTML = `
-      <img src="${p.image || ''}" loading="lazy">
+      <img src="${p.image || ''}">
       <div class="name">${p.name || ''}</div>
       <div class="info">
         ${adminUnlocked ? `
