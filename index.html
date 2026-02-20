@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html>
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.27.20</title>
+  <title>My Shop Herabete Admin v9.27.21</title>
 
   <style> 
     body {
@@ -235,7 +235,27 @@ body.night button {
   color: #ffffff !important;
 }
 
+#customThemeBox {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
 
+#customThemeBox button {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #111;
+  color: white;
+}
+
+
+
+
+
+    
 
     
   </style>
@@ -267,6 +287,7 @@ body.night button {
 
 
 
+
   
   <div class="theme-panel">
   <select id="themeSelect" onchange="changeTheme()">
@@ -275,9 +296,11 @@ body.night button {
     <option value="custom">🎨 Custom</option>
   </select>
 
-  <input type="color" id="customColor" style="display:none;" onchange="applyCustomColor()">
+  <div id="customThemeBox" style="display:none; align-items:center; gap:10px;">
+    <input type="color" id="customColor">
+    <button id="saveCustomThemeBtn">💾 Save</button>
+  </div>
 </div>
-
 
 
 
@@ -288,69 +311,38 @@ body.night button {
 
 <script type="module">
 
-
-window.addEventListener("DOMContentLoaded", () => {
-  const savedTheme = localStorage.getItem("theme");
-  const savedColor = localStorage.getItem("customColor");
-
-  const select = document.getElementById("themeSelect");
-  const colorPicker = document.getElementById("customColor");
-
-  if (!savedTheme) return;
-
-  select.value = savedTheme;
-
-  if (savedTheme === "night") {
-    document.body.classList.add("night");
-  }
-
-  if (savedTheme === "custom") {
-    document.body.classList.add("custom");
-    colorPicker.style.display = "inline-block";
-
-    if (savedColor) {
-      document.body.style.background = savedColor;
-      document.body.style.color = "#ffffff";
-      colorPicker.value = savedColor;
-    }
-  }
-});
-
-
-  window.changeTheme = function() {
+window.changeTheme = function() {
   const theme = document.getElementById("themeSelect").value;
-  const colorPicker = document.getElementById("customColor");
+  const customBox = document.getElementById("customThemeBox");
 
-  document.body.classList.remove("night", "custom");
+  document.body.classList.remove("night");
 
   if (theme === "day") {
+    document.body.style.background = "";
+    document.body.style.color = "";
     localStorage.setItem("theme", "day");
-    colorPicker.style.display = "none";
+    customBox.style.display = "none";
   }
 
   if (theme === "night") {
     document.body.classList.add("night");
+    document.body.style.background = "";
+    document.body.style.color = "";
     localStorage.setItem("theme", "night");
-    colorPicker.style.display = "none";
+    customBox.style.display = "none";
   }
 
   if (theme === "custom") {
-    document.body.classList.add("custom");
-    colorPicker.style.display = "inline-block";
-    localStorage.setItem("theme", "custom");
+    customBox.style.display = "flex";
   }
 };
 
-window.applyCustomColor = function() {
-  const color = document.getElementById("customColor").value;
-
-  document.body.style.background = color;
-  document.body.style.color = "#ffffff";
-
-  localStorage.setItem("customColor", color);
-};
 
 
+
+
+
+  
 
   
 
@@ -729,6 +721,57 @@ window.deleteProduct = function(i) {
 };
 
 
+
+
+  window.addEventListener("DOMContentLoaded", () => {
+  const savedTheme = localStorage.getItem("theme");
+  const savedColor = localStorage.getItem("customColor");
+
+  const select = document.getElementById("themeSelect");
+  const customBox = document.getElementById("customThemeBox");
+  const colorPicker = document.getElementById("customColor");
+
+  if (!savedTheme) return;
+
+  select.value = savedTheme;
+
+  if (savedTheme === "night") {
+    document.body.classList.add("night");
+  }
+
+  if (savedTheme === "custom" && savedColor) {
+    customBox.style.display = "flex";
+    document.body.style.background = savedColor;
+    document.body.style.color = "#ffffff";
+    colorPicker.value = savedColor;
+  }
+});
+
+
+  
+
+
+
+  
+  document.getElementById("saveCustomThemeBtn").addEventListener("click", () => {
+  const color = document.getElementById("customColor").value;
+
+  // Apply immediately
+  document.body.classList.remove("night");
+  document.body.style.background = color;
+  document.body.style.color = "#ffffff";
+
+  // Save permanently in device
+  localStorage.setItem("theme", "custom");
+  localStorage.setItem("customColor", color);
+
+  alert("Custom theme saved ✅");
+});
+
+
+
+  
+
 document.getElementById("saveOrderBtn")
   ?.addEventListener("click", saveOrder);
   
@@ -739,33 +782,6 @@ document.getElementById("adminOffBtn").onclick = logoutAdmin;
 document.getElementById("addProductBtn").onclick = () => alert("Use sheet to add");
 </script>
 
-
-  window.addEventListener("DOMContentLoaded", () => {
-  const savedTheme = localStorage.getItem("theme");
-  const savedColor = localStorage.getItem("customColor");
-
-  const select = document.getElementById("themeSelect");
-  const colorPicker = document.getElementById("customColor");
-
-  if (savedTheme) {
-    select.value = savedTheme;
-
-    if (savedTheme === "night") {
-      document.body.classList.add("night");
-    }
-
-    if (savedTheme === "custom") {
-      document.body.classList.add("custom");
-      colorPicker.style.display = "inline-block";
-
-      if (savedColor) {
-        document.body.style.background = savedColor;
-        document.body.style.color = "#ffffff";
-        colorPicker.value = savedColor;
-      }
-    }
-  }
-});
 
 
   
