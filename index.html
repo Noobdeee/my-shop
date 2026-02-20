@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.27.22</title>
+  <title>My Shop Herabete Admin v9.27.23</title>
 
   <style> 
     body {
@@ -230,22 +230,7 @@ body.night button {
   color: #ffffff !important;
 }
 
-#customThemeBox {
-  display: none;
-  align-items: center;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-#customThemeBox button {
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  background: #111;
-  color: white;
-}
-
+    
 
 
 
@@ -291,14 +276,35 @@ body.night button {
     <option value="custom">🎨 Custom</option>
   </select>
 
-  <div id="customThemeBox" style="display:none; align-items:center; gap:10px;">
+
+    
+</div>
+
+
+
+
+
+
+
+
+
+  
+<div id="customThemeModal" class="theme-modal">
+  <div class="theme-modal-content">
+    <h3>Choose Your Custom Theme</h3>
+
     <input type="color" id="customColor">
-    <button id="saveCustomThemeBtn">💾 Save</button>
+
+    <button id="saveCustomThemeBtn">💾 Save Theme</button>
+    <button onclick="closeThemeModal()">Cancel</button>
   </div>
 </div>
 
 
 
+
+
+  
   
 
   
@@ -307,13 +313,28 @@ body.night button {
 <script type="module">
 
 
+document.getElementById("saveCustomThemeBtn").addEventListener("click", () => {
+  const color = document.getElementById("customColor").value;
 
+  document.body.classList.remove("night");
+
+  document.body.style.background = color;
+
+  // auto text color
+  const r = parseInt(color.substr(1,2),16);
+  const g = parseInt(color.substr(3,2),16);
+  const b = parseInt(color.substr(5,2),16);
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  document.body.style.color = brightness > 128 ? "#000" : "#fff";
+
+  localStorage.setItem("theme", "custom");
+  localStorage.setItem("customColor", color);
+
+  closeThemeModal();
+});
   
-
 window.changeTheme = function() {
   const theme = document.getElementById("themeSelect").value;
-  const customBox = document.getElementById("customThemeBox");
-  const savedColor = localStorage.getItem("customColor");
 
   document.body.classList.remove("night");
 
@@ -321,7 +342,6 @@ window.changeTheme = function() {
     document.body.style.background = "";
     document.body.style.color = "";
     localStorage.setItem("theme", "day");
-    customBox.style.display = "none";
   }
 
   if (theme === "night") {
@@ -329,21 +349,12 @@ window.changeTheme = function() {
     document.body.style.background = "";
     document.body.style.color = "";
     localStorage.setItem("theme", "night");
-    customBox.style.display = "none";
   }
 
   if (theme === "custom") {
-    customBox.style.display = "flex";
-
-    // If color already saved, apply immediately
-    if (savedColor) {
-      document.body.style.background = savedColor;
-      document.body.style.color = "#ffffff";
-    }
+    document.getElementById("customThemeModal").style.display = "flex";
   }
 };
-
-
 
 
   
