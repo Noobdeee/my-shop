@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.26.02</title>
+  <title>My Shop Herabete Admin v9.26.03</title>
 
   <style>
     body {
@@ -107,6 +107,8 @@
   Admin Mode: <b>ON</b>
   <button id="adminOffBtn">OFF</button>
   <button id="addProductBtn">➕ Add Product</button>
+  <button id="saveOrderBtn">💾 Save Order</button>
+
 </div>
 
 <button id="adminUnlockBtn" style="display:none;">🔐 Open Admin</button>
@@ -176,6 +178,45 @@ onAuthStateChanged(auth, (user) => {
 
   loadProducts();
 });
+
+
+
+
+
+
+  function saveOrder() {
+  if (!requireAdmin()) return;
+
+  const orderData = products.map((p, index) => ({
+    row: p.row,
+    id: p.id,
+    newPosition: index + 1
+  }));
+
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "reorder",
+      order: orderData
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert("Order saved permanently ✅");
+    } else {
+      alert("Failed to save order ❌");
+    }
+  })
+  .catch(err => {
+    console.error("Save order error:", err);
+    alert("Error saving order");
+  });
+}
+
+
+
+  
 
 /* ================= ADMIN ================= */
 async function unlockAdmin() {
@@ -289,6 +330,10 @@ window.deleteProduct = function(i) {
   }).then(loadProducts);
 };
 
+
+document.getElementById("saveOrderBtn")
+  ?.addEventListener("click", saveOrder);
+  
 document.getElementById("loginBtn").onclick = googleLogin;
 document.getElementById("logoutBtn").onclick = logoutUser;
 document.getElementById("adminUnlockBtn").onclick = unlockAdmin;
