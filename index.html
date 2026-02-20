@@ -3,9 +3,9 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.26.08</title>
+  <title>My Shop Herabete Admin v9.26.09</title>
 
-  <style>
+  <style> 
     body {
       margin: 0;
       font-family: 'Segoe UI', Arial, sans-serif;
@@ -336,24 +336,33 @@ function renderProducts() {
     /* ===== END DRAG SYSTEM ===== */
 
 
-    card.innerHTML = `
-      <img src="${p.image || ''}">
-      <div class="name">${p.name || ''}</div>
-      <div class="info">
-        ${adminUnlocked ? `
-          <input value="${p.name || ''}" id="name-${i}">
-          <textarea id="description-${i}">${p.description || ''}</textarea>
-          <input value="${p.price || ''}" id="price-${i}">
-          <input value="${p.stock || ''}" id="stock-${i}">
-          <button onclick="event.stopPropagation(); saveProduct(${i})">Save</button>
-          <button onclick="event.stopPropagation(); deleteProduct(${i})">Delete</button>
-        ` : `
-          <p>${p.description || ''}</p>
-          <p>₹ ${p.price || ''}</p>
-          <p>Stock: ${p.stock || ''}</p>
-        `}
-      </div>
-    `;
+   card.innerHTML = `
+  <img src="${p.image || ''}" id="preview-${i}">
+  <div class="name">${p.name || ''}</div>
+  <div class="info">
+    ${adminUnlocked ? `
+      <input value="${p.name || ''}" id="name-${i}" placeholder="Name">
+      <textarea id="description-${i}" placeholder="Description">${p.description || ''}</textarea>
+
+      <label>Image URL:</label>
+      <input id="imageUrl-${i}" value="${p.image || ''}" placeholder="https://...">
+
+      <label>Or Upload Image:</label>
+      <input type="file" id="file-${i}" accept="image/*">
+
+      <input value="${p.price || ''}" id="price-${i}" placeholder="Price">
+      <input value="${p.stock || ''}" id="stock-${i}" placeholder="Stock">
+
+      <button onclick="event.stopPropagation(); saveProduct(${i})">Save</button>
+      <button onclick="event.stopPropagation(); deleteProduct(${i})">Delete</button>
+    ` : `
+      <p>${p.description || ''}</p>
+      <p>₹ ${p.price || ''}</p>
+      <p>Stock: ${p.stock || ''}</p>
+    `}
+  </div>
+`;
+
 
     card.addEventListener("click", (e) => {
       if (!e.target.closest("input, textarea, button")) {
@@ -381,9 +390,27 @@ function renderProducts() {
 
 
 
-  
-window.saveProduct = function(i) {
+  window.saveProduct = async function(i) {
   if (!requireAdmin()) return;
+
+  const fileInput = document.getElementById(`file-${i}`);
+  const urlInput = document.getElementById(`imageUrl-${i}`);
+
+  let image = products[i].image || "";
+
+  // If URL entered
+  if (urlInput && urlInput.value.trim() !== "") {
+    image = urlInput.value.trim();
+  }
+
+  // If file selected → convert to Base64
+  if (fileInput && fileInput.files[0]) {
+    image = await new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = e => resolve(e.target.result);
+      reader.readAsDataURL(fileInput.files[0]);
+    });
+  }
 
   fetch(API_URL, {
     method: "POST",
@@ -393,10 +420,25 @@ window.saveProduct = function(i) {
       name: document.getElementById(`name-${i}`).value,
       description: document.getElementById(`description-${i}`).value,
       price: document.getElementById(`price-${i}`).value,
-      stock: document.getElementById(`stock-${i}`).value
+      stock: document.getElementById(`stock-${i}`).value,
+      image: image
     })
-  }).then(loadProducts);
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      products[i].image = image;
+      document.getElementById(`preview-${i}`).src = image;
+      alert("Saved Successfully ✅");
+    } else {
+      alert("Save failed ❌");
+    }
+  });
 };
+
+
+
+  
 
 window.deleteProduct = function(i) {
   if (!requireAdmin()) return;
