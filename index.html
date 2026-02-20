@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.27.10</title>
+  <title>My Shop Herabete Admin v9.27.11</title>
 
   <style> 
     body {
@@ -151,6 +151,8 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyxnxuEAgJCMA9y1y_GRkyY
 /* ================= STATE ================= */
 let adminUnlocked = false;
 let products = [];
+  let openCards = new Set();
+
 
 /* ================= AUTH ================= */
 function googleLogin() {
@@ -293,6 +295,10 @@ function renderProducts() {
   products.forEach((p, i) => {
     const card = document.createElement("div");
     card.className = "card";
+    if (openCards.has(p.row)) {
+  card.classList.add("show");
+}
+
 
     /* ===== SMART GRID DRAG SYSTEM ===== */
     if (adminUnlocked) {
@@ -386,7 +392,14 @@ function renderProducts() {
     return; // do nothing when editing
   }
 
-  card.classList.toggle("show");
+ card.classList.toggle("show");
+
+if (card.classList.contains("show")) {
+  openCards.add(p.row);
+} else {
+  openCards.delete(p.row);
+}
+
 });
 
 
@@ -447,9 +460,11 @@ function renderProducts() {
   .then(res => res.json())
   .then(data => {
     if (data.success) {
-      products[i].image = image;
-      document.getElementById(`preview-${i}`).src = image;
-      alert("Saved Successfully ✅");
+     alert("Saved Successfully ✅");
+
+// Reload fresh data but preserve open cards
+loadProducts();
+
     } else {
       alert("Save failed ❌");
     }
