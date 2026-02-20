@@ -1,9 +1,10 @@
+
 <!DOCTYPE html> 
 <html>
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.27.32</title>
+  <title>My Shop Herabete Admin v9.27.30</title>
 
   <style> 
     body {
@@ -434,22 +435,24 @@ document.getElementById("saveCustomThemeBtn").addEventListener("click", () => {
 
 
 
-// Elements
-const themeSelect = document.getElementById("themeSelect");
-const customModal = document.getElementById("customThemeModal");
-const colorInput = document.getElementById("customColor");
-const colorPreview = document.getElementById("colorPreview");
-const saveBtn = document.getElementById("saveCustomThemeBtn");
-const cancelBtn = document.getElementById("cancelCustomThemeBtn");
 
-// Apply saved theme silently on load
-window.addEventListener("DOMContentLoaded", () => {
+
+
+
+
+  window.addEventListener("DOMContentLoaded", () => {
+  const select = document.getElementById("themeSelect");
+  const colorInput = document.getElementById("customColor");
+  const colorPreview = document.getElementById("colorPreview");
+  const customModal = document.getElementById("customThemeModal");
+
   const savedTheme = localStorage.getItem("theme");
   const savedColor = localStorage.getItem("customColor");
 
+  // Apply saved theme silently
   if (savedTheme === "night") {
     document.body.classList.add("night");
-    themeSelect.value = "night";
+    select.value = "night";
   } else if (savedTheme === "custom" && savedColor) {
     document.body.classList.remove("night");
     document.body.style.background = savedColor;
@@ -462,73 +465,36 @@ window.addEventListener("DOMContentLoaded", () => {
 
     colorInput.value = savedColor;
     colorPreview.style.background = savedColor;
-    themeSelect.value = "custom"; 
+
+    select.value = "custom"; // set dropdown, but DO NOT open modal
   } else {
-    themeSelect.value = "day";
+    select.value = "day";
   }
+
+  // Only open modal when user actively selects "Custom"
+  select.addEventListener("change", () => {
+    const theme = select.value;
+
+    if (theme === "day") {
+      document.body.classList.remove("night");
+      document.body.style.background = "";
+      document.body.style.color = "";
+      localStorage.setItem("theme", "day");
+    } else if (theme === "night") {
+      document.body.classList.add("night");
+      document.body.style.background = "";
+      document.body.style.color = "";
+      localStorage.setItem("theme", "night");
+    } else if (theme === "custom") {
+      // Only open modal on user action
+      customModal.style.display = "flex";
+    }
+  });
 });
-
-// Dropdown change
-themeSelect.addEventListener("change", () => {
-  const theme = themeSelect.value;
-  if (theme === "day") {
-    document.body.classList.remove("night");
-    document.body.style.background = "";
-    document.body.style.color = "";
-    localStorage.setItem("theme", "day");
-  } else if (theme === "night") {
-    document.body.classList.add("night");
-    document.body.style.background = "";
-    document.body.style.color = "";
-    localStorage.setItem("theme", "night");
-  } else if (theme === "custom") {
-    customModal.style.display = "flex";
-  }
-});
-
-// Live preview of color
-colorInput.addEventListener("input", () => {
-  colorPreview.style.background = colorInput.value;
-});
-
-// Save custom theme
-saveBtn.addEventListener("click", () => {
-  const color = colorInput.value;
-  const r = parseInt(color.substr(1,2),16);
-  const g = parseInt(color.substr(3,2),16);
-  const b = parseInt(color.substr(5,2),16);
-  const brightness = (r*299 + g*587 + b*114)/1000;
-  const textColor = brightness>128 ? "#000" : "#fff";
-
-  document.body.classList.remove("night");
-  document.body.style.background = color;
-  document.body.style.color = textColor;
-
-  localStorage.setItem("theme", "custom");
-  localStorage.setItem("customColor", color);
-
-  customModal.style.display = "none";
-});
-
-// Cancel modal
-cancelBtn.addEventListener("click", () => {
-  customModal.style.display = "none";
-  const savedTheme = localStorage.getItem("theme") || "day";
-  themeSelect.value = savedTheme;
-});
-
-
-
-
-
-
-
   
 
 
 
-
-  
 
   
 
