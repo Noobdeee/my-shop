@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.28.9</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title>My Shop Herabete Admin v9.28.10</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
 
   <style> 
     body {
@@ -900,15 +900,11 @@ function loadProducts() {
 
 
 
-  
-function renderProducts() {
+  function renderProducts() {
 
   const container = document.getElementById("productsContainer");
 
-  if (!container.dataset.rendered) {
-    container.innerHTML = "";
-    container.dataset.rendered = "true";
-  }
+  if (!container) return; // stop safely if not found
 
   const fragment = document.createDocumentFragment();
 
@@ -928,7 +924,6 @@ function renderProducts() {
   container.innerHTML = "";
   container.appendChild(fragment);
 }
-
 
   
 
