@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.27.30</title>
+  <title>My Shop Herabete Admin v9.27.31</title>
 
   <style> 
     body {
@@ -440,11 +440,13 @@ document.getElementById("saveCustomThemeBtn").addEventListener("click", () => {
 
 
 
-  window.addEventListener("DOMContentLoaded", () => {
+
+
+window.addEventListener("DOMContentLoaded", () => {
   const select = document.getElementById("themeSelect");
+  const customModal = document.getElementById("customThemeModal");
   const colorInput = document.getElementById("customColor");
   const colorPreview = document.getElementById("colorPreview");
-  const customModal = document.getElementById("customThemeModal");
 
   const savedTheme = localStorage.getItem("theme");
   const savedColor = localStorage.getItem("customColor");
@@ -466,12 +468,13 @@ document.getElementById("saveCustomThemeBtn").addEventListener("click", () => {
     colorInput.value = savedColor;
     colorPreview.style.background = savedColor;
 
-    select.value = "custom"; // set dropdown, but DO NOT open modal
+    select.value = "custom"; // dropdown shows custom
+    // DO NOT open modal
   } else {
     select.value = "day";
   }
 
-  // Only open modal when user actively selects "Custom"
+  // Change event
   select.addEventListener("change", () => {
     const theme = select.value;
 
@@ -486,15 +489,43 @@ document.getElementById("saveCustomThemeBtn").addEventListener("click", () => {
       document.body.style.color = "";
       localStorage.setItem("theme", "night");
     } else if (theme === "custom") {
-      // Only open modal on user action
+      // OPEN MODAL ONLY WHEN USER SELECTS CUSTOM
       customModal.style.display = "flex";
     }
   });
+
+  // Color preview in real-time
+  colorInput.addEventListener("input", () => {
+    colorPreview.style.background = colorInput.value;
+  });
+
+  // Save custom theme
+  document.getElementById("saveCustomThemeBtn").addEventListener("click", () => {
+    const color = colorInput.value;
+
+    const r = parseInt(color.substr(1,2),16);
+    const g = parseInt(color.substr(3,2),16);
+    const b = parseInt(color.substr(5,2),16);
+    const brightness = (r*299 + g*587 + b*114)/1000;
+
+    document.body.classList.remove("night");
+    document.body.style.background = color;
+    document.body.style.color = brightness > 128 ? "#000" : "#fff";
+
+    localStorage.setItem("theme", "custom");
+    localStorage.setItem("customColor", color);
+
+    customModal.style.display = "none";
+  });
+
+  // Cancel button
+  document.getElementById("cancelCustomThemeBtn").addEventListener("click", () => {
+    customModal.style.display = "none";
+  });
 });
+
+
   
-
-
-
 
   
 
@@ -880,64 +911,7 @@ window.deleteProduct = function(i) {
 
 
 
-
-  
-window.addEventListener("DOMContentLoaded", () => {
-  const savedTheme = localStorage.getItem("theme");
-  const savedColor = localStorage.getItem("customColor");
-
-  if (savedTheme) {
-    document.getElementById("themeSelect").value = savedTheme; // set dropdown silently
-
-    if (savedTheme === "night") {
-      document.body.classList.add("night");
-    }
-
-    if (savedTheme === "custom" && savedColor) {
-      // APPLY COLOR silently, DO NOT OPEN MODAL
-      document.body.classList.remove("night");
-      document.body.style.background = savedColor;
-
-      const r = parseInt(savedColor.substr(1,2),16);
-      const g = parseInt(savedColor.substr(3,2),16);
-      const b = parseInt(savedColor.substr(5,2),16);
-      const brightness = (r*299 + g*587 + b*114)/1000;
-      document.body.style.color = brightness > 128 ? "#000" : "#fff";
-
-      // update picker preview
-      document.getElementById("customColor").value = savedColor;
-      document.getElementById("colorPreview").style.background = savedColor;
-    }
-  }
-
-  // ADD CHANGE EVENT AFTER PAGE LOAD
-  document.getElementById("themeSelect").addEventListener("change", () => {
-    const theme = document.getElementById("themeSelect").value;
-    if (theme === "day") {
-      document.body.classList.remove("night");
-      document.body.style.background = "";
-      document.body.style.color = "";
-      localStorage.setItem("theme", "day");
-    } else if (theme === "night") {
-      document.body.classList.add("night");
-      document.body.style.background = "";
-      document.body.style.color = "";
-      localStorage.setItem("theme", "night");
-    } else if (theme === "custom") {
-      // OPEN MODAL ONLY WHEN USER SELECTS CUSTOM
-      document.getElementById("customThemeModal").style.display = "flex";
-    }
-    console.log(theme);
-  });
-});
-
-
-
-
-
-
-
-  
+    
 
 const customModal = document.getElementById("customThemeModal");
 const colorInput = document.getElementById("customColor");
