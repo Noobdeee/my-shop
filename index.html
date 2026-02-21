@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.28.3</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title>My Shop Herabete Admin v9.28.4</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
 
   <style> 
     body {
@@ -659,7 +659,8 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyxnxuEAgJCMA9y1y_GRkyY
 let adminUnlocked = false;
 let products = [];
   let openCards = new Set();
-
+let authReady = false;
+let productsReady = false;
 
 /* ================= AUTH ================= */
 function googleLogin() {
@@ -673,31 +674,24 @@ function logoutUser() {
 
 
 
-  
-onAuthStateChanged(auth, (user) => {
+
+  onAuthStateChanged(auth, (user) => {
 
   const overlay = document.getElementById("loginOverlay");
-  const loader = document.getElementById("authLoading");
-  // Remove loader once Firebase responds
-  loader.style.display = "none";
 
-  
   adminUnlocked = false;
   document.getElementById("adminBar").style.display = "none";
   document.getElementById("adminUnlockBtn").style.display = "none";
 
   if (user) {
-
-    // Hide login overlay
+    
     overlay.style.display = "none";
 
-    // Show user section
     document.getElementById("userSection").style.display = "flex";
     document.getElementById("loginBtn").style.display = "none";
     document.getElementById("userPhoto").src = user.photoURL;
     document.getElementById("userName").textContent = user.displayName;
 
-    // Admin check
     if (user.uid === ADMIN_UID) {
       document.getElementById("adminUnlockBtn").style.display = "block";
     }
@@ -726,11 +720,14 @@ onAuthStateChanged(auth, (user) => {
 
   } else {
 
-    // Not logged in
     overlay.style.display = "flex";
     document.getElementById("userSection").style.display = "none";
     document.getElementById("loginBtn").style.display = "block";
   }
+
+  // ✅ IMPORTANT PART
+  authReady = true;
+  checkAppReady();
 
 });
 
@@ -742,7 +739,16 @@ onAuthStateChanged(auth, (user) => {
 
 
   
+function checkAppReady() {
+  if (authReady && productsReady) {
+    document.getElementById("authLoading").style.display = "none";
+  }
+}
 
+
+
+
+  
 
   function saveOrder() {
   if (!requireAdmin()) return;
@@ -824,6 +830,9 @@ function loadProducts() {
     .then(data => {
       products = data;
       renderProducts();
+
+      productsReady = true;
+      checkAppReady();
     });
 }
 
