@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.30.4</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title>My Shop Herabete Admin v9.30.5</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
 
   <style> 
     body {
@@ -686,8 +686,7 @@ function logoutUser() {
 
 
 
-
-  onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, (user) => {
 
   const overlay = document.getElementById("loginOverlay");
 
@@ -708,7 +707,6 @@ function logoutUser() {
       document.getElementById("adminUnlockBtn").style.display = "block";
     }
 
-    // 🌸 FORCE Pink Theme For YUSRA
     const firstName = user.displayName
       ? user.displayName.trim().split(" ")[0].toUpperCase()
       : "";
@@ -737,14 +735,13 @@ function logoutUser() {
     document.getElementById("loginBtn").style.display = "block";
   }
 
-  // ✅ IMPORTANT PART
   authReady = true;
   checkAppReady();
 
 });
 
 
- loadProducts();
+ 
 
 
 
