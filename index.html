@@ -677,7 +677,7 @@ let productsReady = false;
 /* ================= AUTH ================= */
 function googleLogin() {
   signInWithPopup(auth, provider)
-    .catch(err => alert(err.message));
+    .catch(err => alert(""Please Login Again, Error Occured."));
 }
 
 function logoutUser() {
@@ -1140,10 +1140,6 @@ document.getElementById("adminUnlockBtn").onclick = unlockAdmin;
 document.getElementById("adminOffBtn").onclick = logoutAdmin;
 document.getElementById("addProductBtn").onclick = () => alert("Use sheet to add");
 </script>
-
-
-
-  loadProducts();
 
 
   
