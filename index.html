@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.28.6</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title>My Shop Herabete Admin v9.28.7</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
 
   <style> 
     body {
@@ -835,14 +835,35 @@ function requireAdmin() {
   return true;
 }
 
-/* ================= PRODUCTS ================= */
-function loadProducts() {
+/* ================= PRODUCTS ================= */function loadProducts() {
+
+  // 1️⃣ Show instantly if cached
+  const cached = sessionStorage.getItem("productsCache");
+  if (cached) {
+    products = JSON.parse(cached);
+    renderProducts();
+  }
+
+  // 2️⃣ Always fetch fresh data in background
   fetch(API_URL)
     .then(res => res.json())
     .then(data => {
-      products = data;
-      renderProducts();
 
+      products = data;
+
+      // Save to cache
+      sessionStorage.setItem("productsCache", JSON.stringify(data));
+
+      // Re-render only if no cache existed
+      if (!cached) {
+        renderProducts();
+      }
+
+      productsReady = true;
+      checkAppReady();
+    })
+    .catch(err => {
+      console.error("Error loading products:", err);
       productsReady = true;
       checkAppReady();
     });
@@ -859,19 +880,35 @@ function loadProducts() {
 
 
 
-  
-function renderProducts() {
-  const list = document.getElementById("productList");
-  list.innerHTML = "";
+  function renderProducts() {
 
-  let dragIndex = null;
+  const container = document.getElementById("productsContainer");
 
-  products.forEach((p, i) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    if (openCards.has(p.row)) {
-  card.classList.add("show");
+  if (!container.dataset.rendered) {
+    container.innerHTML = "";
+    container.dataset.rendered = "true";
+  }
+
+  const fragment = document.createDocumentFragment();
+
+  products.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "product-card";
+
+    div.innerHTML = `
+      <img loading="lazy" src="${p.image || ''}">
+      <h3>${p.name}</h3>
+      <p>${p.price}</p>
+    `;
+
+    fragment.appendChild(div);
+  });
+
+  container.innerHTML = "";
+  container.appendChild(fragment);
 }
+
+  
 
 
     /* ===== SMART GRID DRAG SYSTEM ===== */
