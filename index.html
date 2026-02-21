@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.28.6</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title>My Shop Herabete Admin v9.30.0</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
 
   <style> 
     body {
@@ -665,7 +665,7 @@ const provider = new GoogleAuthProvider();
 
 /* ================= CONFIG ================= */
 const ADMIN_UID = "mOP5jc6j28b8SIvXEyskqCtsQZG3";
-const API_URL = "https://script.google.com/macros/s/AKfycbyxnxuEAgJCMA9y1y_GRkyYGg8TNbGsY3yAjRAipPVuGoocdA_XQnkIPQCbkrZOWmB5/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwjXIv0nS29QPEbbEMjTqsLDhw2SV2ZojhCU2lvb8wdR4R57GwKeIxa8wR-ouLUX1bb/exec";
 
 /* ================= STATE ================= */
 let adminUnlocked = false;
@@ -759,7 +759,8 @@ function checkAppReady() {
 
 
 
-
+const user = auth.currentUser;
+const idToken = await user.getIdToken();
   
 
   function saveOrder() {
@@ -774,7 +775,7 @@ function checkAppReady() {
   fetch(API_URL, {
     method: "POST",
     body: JSON.stringify({
-      action: "reorder",
+      action: "reorder",  token: idToken, 
       order: orderData
     })
   })
@@ -1022,7 +1023,7 @@ if (card.classList.contains("show")) {
   fetch(API_URL, {
     method: "POST",
     body: JSON.stringify({
-      action: "update",
+      action: "update", token: idToken,
       row: products[i].row,
       name: document.getElementById(`name-${i}`).value,
       description: document.getElementById(`description-${i}`).value,
