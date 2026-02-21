@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.28.2</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title>My Shop Herabete Admin v9.28.3</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
 
   <style> 
     body {
@@ -405,7 +405,7 @@ body.night button {
 
 
 
-  <div id="loginOverlay">
+  <div id="loginOverlay" style="display:none;">
   <div class="login-box">
     <h2>Welcome to My Shop</h2>
     <button id="loginBtn">Login with Google</button>
@@ -413,6 +413,27 @@ body.night button {
 </div>
   
 
+  <div id="authLoading" style="
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:#111;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:white;
+  font-size:20px;
+  z-index:30000;
+">
+  Loading...
+</div>
+
+
+
+
+
+
+  
 
 
   
@@ -656,7 +677,11 @@ function logoutUser() {
 onAuthStateChanged(auth, (user) => {
 
   const overlay = document.getElementById("loginOverlay");
+  const loader = document.getElementById("authLoading");
+  // Remove loader once Firebase responds
+  loader.style.display = "none";
 
+  
   adminUnlocked = false;
   document.getElementById("adminBar").style.display = "none";
   document.getElementById("adminUnlockBtn").style.display = "none";
