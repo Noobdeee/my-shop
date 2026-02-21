@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.30.1</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title>My Shop Herabete Admin v9.30.2</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
 
   <style> 
     body {
@@ -1070,20 +1070,11 @@ renderProducts();
 
 
 
-  
-
-  
-window.deleteProduct = async function(i) {
+  window.deleteProduct = async function(i) {
   if (!requireAdmin()) return;
   if (!confirm("Delete product?")) return;
 
-  const user = await new Promise(resolve => {
-    const unsubscribe = auth.onAuthStateChanged(u => {
-      unsubscribe();
-      resolve(u);
-    });
-  });
-
+  const user = auth.currentUser;
   if (!user) return;
 
   const idToken = await user.getIdToken();
@@ -1093,7 +1084,7 @@ window.deleteProduct = async function(i) {
     body: JSON.stringify({
       action: "delete",
       row: products[i].row,
-      token: idToken
+      token: idToken   // ← only this added
     })
   }).then(loadProducts);
 };
