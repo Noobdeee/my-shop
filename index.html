@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.28.11</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title>My Shop Herabete Admin v9.28.12</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
 
   <style> 
     body {
@@ -738,7 +738,13 @@ function logoutUser() {
   }
 
   // ✅ IMPORTANT PART
-  authReady = true;
+ authReady = true;
+
+if (productsReady) {
+  renderProducts();
+}
+
+checkAppReady();
   checkAppReady();
 
 });
@@ -840,41 +846,20 @@ function requireAdmin() {
 
 
   
-/* ================= PRODUCTS ================= */
-function loadProducts() {
-
-  // 1️⃣ Show instantly if cached
-  const cached = sessionStorage.getItem("productsCache");
-  if (cached) {
-    products = JSON.parse(cached);
-    renderProducts();
-  }
-
-  // 2️⃣ Always fetch fresh data in background
+/* ================= PRODUCTS ================= */function loadProducts() {
   fetch(API_URL)
     .then(res => res.json())
     .then(data => {
-
       products = data;
+      productsReady = true;
 
-      // Save to cache
-      sessionStorage.setItem("productsCache", JSON.stringify(data));
-
-      // Re-render only if no cache existed
-      if (!cached) {
+      if (authReady) {
         renderProducts();
       }
 
-      productsReady = true;
-      checkAppReady();
-    })
-    .catch(err => {
-      console.error("Error loading products:", err);
-      productsReady = true;
       checkAppReady();
     });
 }
-
   
 
 
