@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.28.12</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title>My Shop Herabete Admin v9.28.6</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
 
   <style> 
     body {
@@ -738,20 +738,14 @@ function logoutUser() {
   }
 
   // ✅ IMPORTANT PART
- authReady = true;
-
-if (productsReady) {
-  renderProducts();
-}
-
-checkAppReady();
+  authReady = true;
   checkAppReady();
 
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadProducts();
-});
+
+ loadProducts();
+
 
 
 
@@ -841,69 +835,150 @@ function requireAdmin() {
   return true;
 }
 
-
-
-
-
-  
-/* ================= PRODUCTS ================= */function loadProducts() {
+/* ================= PRODUCTS ================= */
+function loadProducts() {
   fetch(API_URL)
     .then(res => res.json())
     .then(data => {
       products = data;
+      renderProducts();
+
       productsReady = true;
-
-      if (authReady) {
-        renderProducts();
-      }
-
       checkAppReady();
     });
 }
+
+
+
+
+
+
+
+
+
+
+
+
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function renderProducts() {
+  const list = document.getElementById("productList");
+  list.innerHTML = "";
 
-  const container = document.getElementById("productList");
-  if (!container) return;
+  let dragIndex = null;
 
-  const fragment = document.createDocumentFragment();
+  products.forEach((p, i) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    if (openCards.has(p.row)) {
+  card.classList.add("show");
+}
 
-  products.forEach(p => {
-    const div = document.createElement("div");
-    div.className = "card"; // use your existing card style
 
-    div.innerHTML = `
-      <img loading="lazy" src="${p.image || ''}">
-      <div class="name">${p.name}</div>
-    `;
+    /* ===== SMART GRID DRAG SYSTEM ===== */
+    if (adminUnlocked) {
 
-    fragment.appendChild(div);
+      card.style.touchAction = "none"; // important for mobile
+
+  card.addEventListener("pointerdown", (e) => {
+
+  // ❌ Do NOT drag if clicking inside form elements
+  if (
+    e.target.closest("input") ||
+    e.target.closest("textarea") ||
+    e.target.closest("button") ||
+    e.target.closest("label")
+  ) {
+    return;
+  }
+
+  dragIndex = i;
+  card.classList.add("dragging");
+  card.setPointerCapture(e.pointerId);
+});
+
+
+      card.addEventListener("pointermove", (e) => {
+        if (dragIndex === null) return;
+
+        const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+        const targetCard = elementBelow?.closest(".card");
+
+        if (!targetCard) return;
+
+        const cards = Array.from(document.querySelectorAll(".card"));
+        const overIndex = cards.indexOf(targetCard);
+
+        if (overIndex !== -1 && overIndex !== dragIndex) {
+
+          const draggedItem = products.splice(dragIndex, 1)[0];
+          products.splice(overIndex, 0, draggedItem);
+
+          dragIndex = overIndex;
+
+          renderProducts();
+        }
+      });
+
+      card.addEventListener("pointerup", () => {
+        dragIndex = null;
+        document.querySelectorAll(".card")
+          .forEach(c => c.classList.remove("dragging"));
+      });
+    }
+    /* ===== END DRAG SYSTEM ===== */
+
+
+   card.innerHTML = `
+  <img src="${p.image || ''}" id="preview-${i}">
+  <div class="name">${p.name || ''}</div>
+  <div class="info">
+    ${adminUnlocked ? `
+      <input value="${p.name || ''}" id="name-${i}" placeholder="Name">
+      <textarea id="description-${i}" placeholder="Description">${p.description || ''}</textarea>
+
+      <label>Image URL:</label>
+      <input id="imageUrl-${i}" value="${p.image || ''}" placeholder="https://...">
+
+      <label>Or Upload Image:</label>
+      <input type="file" id="file-${i}" accept="image/*">
+
+      <input value="${p.price || ''}" id="price-${i}" placeholder="Price">
+      <input value="${p.stock || ''}" id="stock-${i}" placeholder="Stock">
+
+      <button onclick="event.stopPropagation(); saveProduct(${i})">Save</button>
+      <button onclick="event.stopPropagation(); deleteProduct(${i})">Delete</button>
+    ` : `
+      <p>${p.description || ''}</p>
+      <p>₹ ${p.price || ''}</p>
+      <p>Stock: ${p.stock || ''}</p>
+    `}
+  </div>
+`;
+
+
+   card.addEventListener("click", (e) => {
+  if (
+    e.target.closest("input") ||
+    e.target.closest("textarea") ||
+    e.target.closest("button") ||
+    e.target.closest("label")
+  ) {
+    return; // do nothing when editing
+  }
+
+ card.classList.toggle("show");
+
+if (card.classList.contains("show")) {
+  openCards.add(p.row);
+} else {
+  openCards.delete(p.row);
+}
+
+});
+
+
+    list.appendChild(card);
   });
-
-  container.innerHTML = "";
-  container.appendChild(fragment);
 }
 
 
@@ -914,13 +989,6 @@ function renderProducts() {
 
 
 
-
-
-
-
-
-
-  
   
 
 
