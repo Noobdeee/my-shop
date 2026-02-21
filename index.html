@@ -835,25 +835,22 @@ function requireAdmin() {
   return true;
 }
 
-/* ================= PRODUCTS ================= */function loadProducts() {
-  fetch(API_URL)
-    .then(res => res.json())
-    .then(data => {
-      products = data;
-      renderProducts();
-      requestAnimationFrame(() => {
-        productsReady = true;
-        checkAppReady();
-      });
-    })
-    .catch(err => {
-      console.error("Product load failed:", err);
-      // EVEN IF ERROR, mark products ready so loader disappears
-      productsReady = true;
-      checkAppReady();
-    });
+/* ================= PRODUCTS ================= */async function loadProducts() {
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    products = Array.isArray(data) ? data : [];
+    renderProducts();
+  } catch(err) {
+    console.error("Product load failed:", err);
+    products = [];
+  } finally {
+    productsReady = true;
+    checkAppReady(); // hide loader no matter what
+  }
 }
 
+loadProducts();
 
 
 
