@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.28.00</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title>My Shop Herabete Admin v9.28.1</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
 
   <style> 
     body {
@@ -332,11 +332,67 @@ body.night button {
   to { opacity: 1; transform: scale(1);}
 }
     
+#loginOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20000;
+}
 
+.login-box {
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.login-box button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #4285F4;
+  color: white;
+  cursor: pointer;
+}
+
+
+
+
+    
     
   </style>
 </head>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
 <body>
 
 <header>My Shop Heeraa-betee</header>
@@ -347,8 +403,19 @@ body.night button {
   <button id="logoutBtn">Logout</button>
 </div>
 
-<button id="loginBtn">Login with Google</button>
 
+
+  <div id="loginOverlay">
+  <div class="login-box">
+    <h2>Welcome to My Shop</h2>
+    <button id="loginBtn">Login with Google</button>
+  </div>
+</div>
+  
+
+
+
+  
 <div id="adminBar">
   Admin Mode: <b>ON</b>
   <button id="adminOffBtn">OFF</button>
@@ -607,34 +674,27 @@ onAuthStateChanged(auth, (user) => {
   /////
   // 🌸 FORCE Pink Theme For YUSRA (First Name Only)
 onAuthStateChanged(auth, (user) => {
-
+  const overlay = document.getElementById("loginOverlay");
   if (user) {
-
+    document.getElementById("userSection").style.display = "flex";
+    document.getElementById("userPhoto").src = user.photoURL;
+    document.getElementById("userName").textContent = user.displayName;
+    
     const firstName = user.displayName
       ? user.displayName.trim().split(" ")[0].toUpperCase()
       : "";
 
-    if (firstName === "YUSRA") {
-      const pink = "#ff69b4";
-      localStorage.setItem("theme", "custom");
-      localStorage.setItem("customColor", pink);
-      document.body.classList.remove("night");
-      document.body.style.background = pink;
-      const r = parseInt(pink.substr(1,2),16);
-      const g = parseInt(pink.substr(3,2),16);
-      const b = parseInt(pink.substr(5,2),16);
-      const brightness = (r*299 + g*587 + b*114)/1000;
-      document.body.style.color = brightness > 128 ? "#000" : "#fff";
-    }
+    if (firstName === "YUSRA") { const pink = "#ff69b4"; localStorage.setItem("theme", "custom"); document.body.style.background = pink; const r = parseInt(pink.substr(1,2),16); const g = parseInt(pink.substr(3,2),16); const b = parseInt(pink.substr(5,2),16); const brightness = (r*299 + g*587 + b*114)/1000; document.body.style.color = brightness > 128 ? "#000" : "#fff";}
   }
-
+  else 
+  {overlay.style.display = "flex";}
 });  ///// YUSRA 
   
 
-  loadProducts();
+ 
 });
 
-
+ loadProducts();
 
 
 
