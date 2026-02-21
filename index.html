@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.31.1</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title>My Shop Herabete Admin v9.31.2</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
 
   <style> 
     body {
@@ -682,17 +682,16 @@ function showLoginMessage(msg) {
   if (msgDiv) msgDiv.textContent = msg;
 }
 
-function googleLogin() {
-  if (loginInProgress) return; // prevent multiple popups
-  loginInProgress = true;
 
+
+  function googleLogin() {
+  // Removed loginInProgress guard
   showLoginMessage(""); // clear previous message
 
   signInWithPopup(auth, provider)
     .then(result => {
       showLoginMessage(""); // clear on success
-      // Optional: you can access result.user here
-      // const user = result.user;
+      // Optional: use result.user here
     })
     .catch(err => {
       let msg = "";
@@ -713,12 +712,12 @@ function googleLogin() {
 
       showLoginMessage(msg);
       console.warn("Firebase login error:", err.code, err.message);
-    })
-    .finally(() => {
-      loginInProgress = false; // allow retry
     });
 }
 
+
+
+  
   
 function logoutUser() {
   signOut(auth);
