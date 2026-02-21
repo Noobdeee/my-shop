@@ -675,11 +675,46 @@ let authReady = false;
 let productsReady = false;
 
 /* ================= AUTH ================= */
-function googleLogin() {
-  signInWithPopup(auth, provider)
-    .catch(err => alert(err.message));
+let loginInProgress = false;
+
+function showLoginMessage(msg) {
+  document.getElementById("loginMessage").textContent = msg;
 }
 
+function googleLogin() {
+  if (loginInProgress) return; // prevent multiple popups
+  loginInProgress = true;
+
+  showLoginMessage(""); // clear previous message
+
+  signInWithPopup(auth, provider)
+    .then(result => {
+      showLoginMessage(""); // clear on success
+    })
+    .catch(err => {
+      let msg = "";
+
+      switch(err.code) {
+        case "auth/cancelled-popup-request":
+          msg = "Login was cancelled or blocked. Please click the button again.";
+          break;
+        case "auth/popup-blocked":
+          msg = "Popup blocked! Allow popups in your browser and try again.";
+          break;
+        case "auth/popup-closed-by-user":
+          msg = "You closed the login popup. Please try again.";
+          break;
+        default:
+          msg = "Login failed. Please try again.";
+      }
+
+      showLoginMessage(msg);
+      console.warn(err.code, err.message);
+    })
+    .finally(() => {
+      loginInProgress = false;
+    });
+}
 function logoutUser() {
   signOut(auth);
 }
