@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.30.7</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title>My Shop Herabete Admin v9.28.6</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
 
   <style> 
     body {
@@ -665,7 +665,7 @@ const provider = new GoogleAuthProvider();
 
 /* ================= CONFIG ================= */
 const ADMIN_UID = "mOP5jc6j28b8SIvXEyskqCtsQZG3";
-const API_URL = "https://script.google.com/macros/s/AKfycbwjXIv0nS29QPEbbEMjTqsLDhw2SV2ZojhCU2lvb8wdR4R57GwKeIxa8wR-ouLUX1bb/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyxnxuEAgJCMA9y1y_GRkyYGg8TNbGsY3yAjRAipPVuGoocdA_XQnkIPQCbkrZOWmB5/exec";
 
 /* ================= STATE ================= */
 let adminUnlocked = false;
@@ -677,7 +677,7 @@ let productsReady = false;
 /* ================= AUTH ================= */
 function googleLogin() {
   signInWithPopup(auth, provider)
-    .catch(err => alert(""Please Login Again, Error Occured."));
+    .catch(err => alert(err.message));
 }
 
 function logoutUser() {
@@ -686,7 +686,8 @@ function logoutUser() {
 
 
 
-onAuthStateChanged(auth, (user) => {
+
+  onAuthStateChanged(auth, (user) => {
 
   const overlay = document.getElementById("loginOverlay");
 
@@ -707,6 +708,7 @@ onAuthStateChanged(auth, (user) => {
       document.getElementById("adminUnlockBtn").style.display = "block";
     }
 
+    // 🌸 FORCE Pink Theme For YUSRA
     const firstName = user.displayName
       ? user.displayName.trim().split(" ")[0].toUpperCase()
       : "";
@@ -735,13 +737,14 @@ onAuthStateChanged(auth, (user) => {
     document.getElementById("loginBtn").style.display = "block";
   }
 
+  // ✅ IMPORTANT PART
   authReady = true;
   checkAppReady();
 
 });
 
 
- 
+ loadProducts();
 
 
 
@@ -759,9 +762,6 @@ function checkAppReady() {
 
   
 
-
-  
-
   function saveOrder() {
   if (!requireAdmin()) return;
 
@@ -774,7 +774,7 @@ function checkAppReady() {
   fetch(API_URL, {
     method: "POST",
     body: JSON.stringify({
-      action: "reorder",  token: idToken, 
+      action: "reorder",
       order: orderData
     })
   })
@@ -835,22 +835,20 @@ function requireAdmin() {
   return true;
 }
 
-/* ================= PRODUCTS ================= */async function loadProducts() {
-  try {
-    const res = await fetch(API_URL);
-    const data = await res.json();
-    products = Array.isArray(data) ? data : [];
-    renderProducts();
-  } catch(err) {
-    console.error("Product load failed:", err);
-    products = [];
-  } finally {
-    productsReady = true;
-    checkAppReady(); // hide loader no matter what
-  }
+/* ================= PRODUCTS ================= */
+function loadProducts() {
+  fetch(API_URL)
+    .then(res => res.json())
+    .then(data => {
+      products = data;
+      renderProducts();
+
+      productsReady = true;
+      checkAppReady();
+    });
 }
 
-loadProducts();
+
 
 
 
@@ -1024,7 +1022,7 @@ if (card.classList.contains("show")) {
   fetch(API_URL, {
     method: "POST",
     body: JSON.stringify({
-      action: "update", token: idToken,
+      action: "update",
       row: products[i].row,
       name: document.getElementById(`name-${i}`).value,
       description: document.getElementById(`description-${i}`).value,
@@ -1057,28 +1055,17 @@ renderProducts();
 
 
 
-  window.deleteProduct = async function(i) {
+  
+
+window.deleteProduct = function(i) {
   if (!requireAdmin()) return;
   if (!confirm("Delete product?")) return;
 
-  const user = auth.currentUser;
-  if (!user) return;
-
-  const idToken = await user.getIdToken();
-
   fetch(API_URL, {
     method: "POST",
-    body: JSON.stringify({
-      action: "delete",
-      row: products[i].row,
-      token: idToken   // ← only this added
-    })
+    body: JSON.stringify({ action: "delete", row: products[i].row })
   }).then(loadProducts);
 };
-
-
-
-  
 
 
 
@@ -1140,6 +1127,7 @@ document.getElementById("adminUnlockBtn").onclick = unlockAdmin;
 document.getElementById("adminOffBtn").onclick = logoutAdmin;
 document.getElementById("addProductBtn").onclick = () => alert("Use sheet to add");
 </script>
+
 
 
   
