@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.30.3</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title>My Shop Herabete Admin v9.30.4</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
 
   <style> 
     body {
@@ -839,15 +839,23 @@ function requireAdmin() {
 }
 
 /* ================= PRODUCTS ================= */
-function loadProducts() {
+  function loadProducts() {
   fetch(API_URL)
     .then(res => res.json())
     .then(data => {
+
       products = data;
+
+      // Render products first
       renderProducts();
 
-      productsReady = true;
-      checkAppReady();
+      // Wait one frame so browser paints UI
+      requestAnimationFrame(() => {
+
+        productsReady = true;
+        checkAppReady();
+
+      });
     });
 }
 
