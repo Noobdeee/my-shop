@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.27.32</title>
+  <title>My Shop Herabete Admin v9.27.35</title>
 
   <style> 
     body {
@@ -489,9 +489,16 @@ window.addEventListener("DOMContentLoaded", () => {
       document.body.style.color = "";
       localStorage.setItem("theme", "night");
     } else if (theme === "custom") {
-      // OPEN MODAL ONLY WHEN USER SELECTS CUSTOM
-      customModal.style.display = "flex";
-    }
+
+  const savedColor = localStorage.getItem("customColor");
+
+  if (savedColor) {
+    colorInput.value = savedColor;
+    colorPreview.style.background = savedColor;
+  }
+
+  customModal.style.display = "flex";
+}
   });
 
   // Color preview in real-time
