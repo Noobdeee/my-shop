@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.27.35</title>
+  <title>My Shop Herabete Admin v9.27.36</title>
 
   <style> 
     body {
@@ -601,6 +601,37 @@ onAuthStateChanged(auth, (user) => {
     document.getElementById("userSection").style.display = "none";
     document.getElementById("loginBtn").style.display = "block";
   }
+
+
+
+  /////
+  // 🌸 FORCE Pink Theme For YUSRA (First Name Only)
+if (user.displayName) {
+
+  const firstName = user.displayName.trim().split(" ")[0].toUpperCase();
+
+  if (firstName === "YUSRA") {
+
+    const pink = "#ff69b4";
+
+    // Force save
+    localStorage.setItem("theme", "custom");
+    localStorage.setItem("customColor", pink);
+
+    // Apply immediately
+    document.body.classList.remove("night");
+    document.body.style.background = pink;
+
+    const r = parseInt(pink.substr(1,2),16);
+    const g = parseInt(pink.substr(3,2),16);
+    const b = parseInt(pink.substr(5,2),16);
+    const brightness = (r*299 + g*587 + b*114)/1000;
+
+    document.body.style.color = brightness > 128 ? "#000" : "#fff";
+  }
+}
+  ///// YUSRA 
+  
 
   loadProducts();
 });
