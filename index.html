@@ -5,7 +5,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.32.12</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title>My Shop Herabete Admin v9.32.13</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js" type="module"></script>
   
   <style> 
@@ -371,6 +371,32 @@ body.night button {
   to { transform: rotate(360deg); }
 }
 
+
+
+    #authLoading {
+  position: fixed;
+  inset: 0;
+  background: rgb(0, 136, 0);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* pushes logo up and animation down */
+  align-items: center;
+  padding: 60px 0;
+  z-index: 999999;
+}
+
+.shop-logo {
+  width: 180px;
+  max-width: 80%;
+  object-fit: contain;
+}
+
+.loading-animation {
+  width: 220px;
+  height: 220px;
+}
+
+
     
     
   </style>
@@ -422,39 +448,20 @@ body.night button {
 
 
 
-
-
+<div id="authLoading">
   
-<div id="authLoading" style="
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgb(0, 136, 0);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  z-index: 30000;
-">
+  <!-- SHOP LOGO -->
+  <img src="your-logo.png" alt="Shop Logo" class="shop-logo">
+
+  <!-- LOTTIE LOADING -->
   <dotlottie-wc 
-    src="https://lottie.host/631ccc0b-6bcc-42e0-8cc5-4664874cfed9/8BU1X6vtgD.lottie" 
-    style="width: 250px; height: 250px;"  margin-top: 15px;
-    autoplay 
-    loop>
+    src="https://lottie.host/631ccc0b-6bcc-42e0-8cc5-4664874cfed9/8BU1X6vtgD.lottie"
+    autoplay
+    loop
+    class="loading-animation">
   </dotlottie-wc>
 
-  <div style="
-    margin-top: 15px;
-    color: white;
-    font-size: 20px;
-    font-family: 'Segoe UI', Arial, sans-serif;
-  ">
-    Loading...
-  </div>
 </div>
-
 
 
 
