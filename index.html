@@ -398,23 +398,20 @@ body.night button {
 }
 
 /* Logo container */
-.shop-logo {
+.logo-container {
   width: 100%;
-  height: 55vh;          /* ⬅️ BIG vertical size stays */
-  max-height: none;     /* ⬅️ prevents shrinking */
-  object-fit: contain;  /* ⬅️ no text cropping */
-  display: block;       /* ⬅️ removes inline-image sizing quirks */
-  background: rgb(0,136,0);
-  border-radius: 30px;
+  max-width: none;   /* ⬅️ remove width restriction */
+  margin-bottom: 24px;
 }
 
+    
 /* Logo image */
 .shop-logo {
-  width: 100%;
-  height: 80vh;
-  object-fit: contain;     /* ⬅️ no cropping */
-  background: rgb(0,136,0);/* fills empty space nicely */
+  width: 90vw;       /* ⬅️ responsive width */
+  height: 70vh;      /* ⬅️ tall vertical */
+  object-fit: contain;
   border-radius: 30px;
+  display: block;
 }
 
 /* Loading animation */
@@ -464,7 +461,7 @@ body.night button {
   
 <body>
 
-<header>My Shop Heeraa-betee version: 9.30.73 </header>
+<header>My Shop Heeraa-betee version: 9.30.74 </header>
 
 <div id="userSection" style="display:none;">
   <img id="userPhoto" width="35" height="35" style="border-radius:50%;">
