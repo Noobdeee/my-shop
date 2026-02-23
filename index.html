@@ -398,10 +398,14 @@ body.night button {
 }
 
 /* Logo container */
-.logo-container {
+.shop-logo {
   width: 100%;
-  max-width: 320px;
-  margin-bottom: 24px; /* space between logo and loader */
+  height: 55vh;          /* ⬅️ BIG vertical size stays */
+  max-height: none;     /* ⬅️ prevents shrinking */
+  object-fit: contain;  /* ⬅️ no text cropping */
+  display: block;       /* ⬅️ removes inline-image sizing quirks */
+  background: rgb(0,136,0);
+  border-radius: 30px;
 }
 
 /* Logo image */
@@ -460,7 +464,7 @@ body.night button {
   
 <body>
 
-<header>My Shop Heeraa-betee version: 9.30.71 </header>
+<header>My Shop Heeraa-betee version: 9.30.72 </header>
 
 <div id="userSection" style="display:none;">
   <img id="userPhoto" width="35" height="35" style="border-radius:50%;">
