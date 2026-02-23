@@ -435,21 +435,30 @@ body.night button {
 
   <div id="introSection" style="display:none;">
 
-  <!-- SCROLL FRAME CONTAINER -->
-  <div id="scrollContainer" style="
-    position:relative;
-    width:100%;
-    height:100vh;
-    overflow:hidden;
-    background:#000;
-  ">
-    <img id="scrollFrame" style="
+
+    <div style="height:200vh; position:relative;">
+
+  <video
+    id="scrollVideo"
+    src="https://raw.githubusercontent.com/Noobdeee/my-shop/main/images/Screenrecorder-2025-08-21-22-17-53-790.mp4"
+    muted
+    playsinline
+    preload="auto"
+    style="
+      position:sticky;
+      top:0;
       width:100%;
-      height:100%;
+      height:100vh;
       object-fit:cover;
     ">
-  </div>
+  </video>
 
+</div>
+
+
+
+
+    
   <!-- LOGIN SECTION -->
   <section style="
     height:100vh;
@@ -879,6 +888,10 @@ onAuthStateChanged(auth, (user) => {
     if (intro) intro.style.display = "block";
     if (shop) shop.style.display = "none";
 
+    setTimeout(() => {
+  initScrollVideo();
+}, 200);
+    
     document.getElementById("userSection").style.display = "none";
     document.getElementById("loginBtn").style.display = "block";
   }
@@ -1274,6 +1287,39 @@ document.getElementById("logoutBtn").onclick = logoutUser;
 document.getElementById("adminUnlockBtn").onclick = unlockAdmin;
 document.getElementById("adminOffBtn").onclick = logoutAdmin;
 document.getElementById("addProductBtn").onclick = () => alert("Use sheet to add");
+
+
+
+
+
+  /* ================= SCROLL VIDEO CONTROL ================= */
+
+gsap.registerPlugin(ScrollTrigger);
+
+function initScrollVideo() {
+  const video = document.getElementById("scrollVideo");
+  if (!video) return;
+
+  video.addEventListener("loadedmetadata", () => {
+
+    const duration = video.duration;
+
+    gsap.to(video, {
+      currentTime: duration,
+      ease: "none",
+      scrollTrigger: {
+        trigger: video.parentElement,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1
+      }
+    });
+
+  });
+}
+
+
+  
 </script>
 
 
