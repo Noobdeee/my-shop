@@ -5,7 +5,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Shop Herabete Admin v9.32.57</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title>My Shop Herabete Admin v9.32.58</title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js" type="module"></script>
   
   <style> 
@@ -338,6 +338,8 @@ body.night button {
   from { opacity: 0; transform: scale(0.9);}
   to { opacity: 1; transform: scale(1);}
 }
+
+    
     
 #loginOverlay {
   position: fixed;
@@ -378,42 +380,38 @@ body.night button {
 
 
 
-    
-#authLoading {
+    #authLoading {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
   background: rgb(0, 136, 0);
+
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;   /* center everything properly */
 
-  justify-content: space-between;  /* THIS IS THE FIX */
+  gap: 40px;                 /* space between logo & animation */
 
-  padding-top: 200px;   /* space for logo */
-  padding-bottom: 60vh; /* space from bottom edge */
-  
   z-index: 2147483647;
 }
 
-
-    .shop-logo {
+/* Logo */
+.shop-logo {
   width: 80%;
-  max-width: 400px;
+  max-width: 380px;
   height: auto;
   object-fit: contain;
 }
 
+/* Lottie animation */
+.loading-animation {
+  width: 170px;
+  height: 170px;
+}
+
 
 
     
-.loading-animation {
-  width: 180px;
-  height: 180px;   /* fixed height instead of % */
-}
-
 
 
 
