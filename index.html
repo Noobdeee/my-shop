@@ -5,7 +5,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> My Shop Herabete Admin v9.32.61 </title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title> My Shop Herabete Admin v9.30.62 </title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js" type="module"></script>
   
   <style> 
@@ -384,7 +384,6 @@ body.night button {
 
 
 
-
 #authLoading {
   position: fixed;
   inset: 0;
@@ -412,9 +411,7 @@ body.night button {
   transform: translateX(-50%);
   width: 170px;
   height: 170px;
-}
-
-    
+}    
 
 
     
@@ -480,22 +477,35 @@ body.night button {
 
 
 
-<div id="authLoading">
-  
-  <!-- SHOP LOGO -->
-  <img src="https://github.com/Noobdeee/my-shop/blob/main/images/TilesPro.jpg?raw=true" alt="Shop Logo" class="shop-logo">
 
-  <!-- LOTTIE LOADING -->
-  <dotlottie-wc 
-    src="https://lottie.host/631ccc0b-6bcc-42e0-8cc5-4664874cfed9/8BU1X6vtgD.lottie"
-    autoplay
-    class="loading-animation">
-  </dotlottie-wc>
+
+  
+<div id="authLoading">
+
+  <div class="loader-box">
+
+    <img 
+      src="https://github.com/Noobdeee/my-shop/blob/main/images/TilesPro.jpg?raw=true"
+      class="shop-logo"
+      alt="Shop Logo">
+
+    <dotlottie-wc 
+      src="https://lottie.host/631ccc0b-6bcc-42e0-8cc5-4664874cfed9/8BU1X6vtgD.lottie"
+      autoplay
+      loop
+      class="loading-animation">
+    </dotlottie-wc>
+
+  </div>
 
 </div>
 
 
 
+
+
+
+  
 
 
   
