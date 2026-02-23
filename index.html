@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> My Herabete  v: 9.30.79 </title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title> My Herabete  v: 9.32.0</title>    <!-- ADDING SCROLL EFFECT IN LOGGING PAGE FOR NEW USERS  -->
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js" type="module"></script>
   
   <style> 
@@ -458,6 +458,8 @@ body.night button {
 
 <header>My Shop Heeraa-betee=</header>
 
+  <div id="shopContent" style="display:none;">
+    
 <div id="userSection" style="display:none;">
   <img id="userPhoto" width="35" height="35" style="border-radius:50%;">
   <span id="userName"></span>
@@ -573,7 +575,13 @@ body.night button {
 
   
 <div class="grid" id="productList"></div>
+</div>
 
+
+
+
+
+    
 <script type="module">
 
 function closeThemeModal() {
