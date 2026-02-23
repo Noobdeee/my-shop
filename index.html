@@ -5,7 +5,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> My Shop Herabete Admin v9.32.59 </title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
+  <title> My Shop Herabete Admin v9.32.61 </title>    <!-- ADDING LOGINFIRST SYTEM IF NOT LOGIN YOU CANT USE THE APP -->
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js" type="module"></script>
   
   <style> 
@@ -385,37 +385,34 @@ body.night button {
 
 
 
-
-    #authLoading {
+#authLoading {
   position: fixed;
   inset: 0;
   background: rgb(0, 136, 0);
   z-index: 2147483647;
 }
 
-/* Logo at upper section */
+/* Logo – move lower */
 .shop-logo {
   position: absolute;
-  top: 18%;
+  top: 30%;               /* LOWER than before */
   left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
+  transform: translate(-50%, -50%);
+  width: 85%;
   max-width: 380px;
   height: auto;
   object-fit: contain;
 }
 
-/* Animation stuck to bottom */
+/* Animation – near bottom */
 .loading-animation {
   position: absolute;
-  bottom: 40px;  /* distance from bottom */
+  bottom: 60px;           /* slightly above bottom */
   left: 50%;
   transform: translateX(-50%);
   width: 170px;
   height: 170px;
 }
-
-
 
     
 
