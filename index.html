@@ -383,6 +383,9 @@ body.night button {
 
 
 
+    
+
+
 #authLoading {
   position: fixed;
   inset: 0;
@@ -391,22 +394,22 @@ body.night button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 24px; /* space from screen edges */
+  justify-content: flex-end; /* ⬅️ push content to bottom */
+  padding: 24px 24px 40px;   /* extra bottom spacing */
 }
 
 /* Logo container */
 .logo-container {
   width: 100%;
-  max-width: 320px;   /* prevents edge touching */
-  margin-bottom: 40px;
+  max-width: 320px;
+  margin-bottom: 24px; /* space between logo and loader */
 }
 
 /* Logo image */
 .shop-logo {
   width: 100%;
   height: auto;
-  max-height: 60vh;
+  max-height: 40vh; /* safer for small screens */
   object-fit: contain;
   border-radius: 30px;
 }
@@ -458,7 +461,7 @@ body.night button {
   
 <body>
 
-<header>My Shop Heeraa-betee version: 9.30.67 </header>
+<header>My Shop Heeraa-betee version: 9.30.69. </header>
 
 <div id="userSection" style="display:none;">
   <img id="userPhoto" width="35" height="35" style="border-radius:50%;">
