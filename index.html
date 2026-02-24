@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> My Herabete  v: 9.33.0 </title>    <!-- IMPROVING SCROLL EFFECT IN LOGGING PAGE and ADDING BETER UI  -->
+  <title> My Herabete  v: 9.33.2 </title>    <!-- IMPROVING SCROLL EFFECT IN LOGGING PAGE and ADDING BETER UI  -->
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js" type="module"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -552,32 +552,25 @@ body.night button {
     
   
   <!-- LOGIN SECTION -->
-<section style="
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  background:#111;
-  color:white;
-  text-align:center;
-">
-  <h2>Welcome to My Shop</h2>
+    <section id="loginSection" class="login-hero">
 
-  <button id="loginBtn" style="
-    margin-top:40px;
-    padding:14px 28px;
-    font-size:18px;
-    background:#4285F4;
-    border:none;
-    border-radius:8px;
-    color:white;
-    cursor:pointer;
-  ">
-    Login with Google
-  </button>
+  <div class="glass-card">
+    <h1 class="hero-title">
+      Welcome to <span class="brand">My Shop</span>
+    </h1>
+
+    <p class="hero-sub">
+      Premium Tiles & Marble Collection
+    </p>
+
+    <button id="loginBtn" class="premium-btn">
+      Login with Google
+    </button>
+  </div>
+
+  <div class="scroll-indicator"></div>
+
 </section>
-
 
 
 
