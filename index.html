@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> My Herabete  v: 9.33.3 </title>    <!-- IMPROVING SCROLL EFFECT IN LOGGING PAGE and ADDING BETER UI  -->
+  <title> My Herabete  v: 9.33.4 </title>    <!-- IMPROVING SCROLL EFFECT IN LOGGING PAGE and ADDING BETER UI  -->
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js" type="module"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -708,22 +708,26 @@ body.night button {
 
 
 
-  // ===== TYPING EFFECT =====
-const text = "Welcome to My Shop";
-const typingElement = document.getElementById("typingText");
+  // ===== TYPING EFFECT =====document.addEventListener("DOMContentLoaded", () => {
 
-let index = 0;
+  const text = "Welcome to My Shop";
+  const typingElement = document.getElementById("typingText");
 
-function typeEffect() {
-  if (index < text.length) {
-    typingElement.innerHTML += text.charAt(index);
-    index++;
-    setTimeout(typeEffect, 60);
+  let index = 0;
+
+  function typeEffect() {
+    if (index < text.length) {
+      typingElement.textContent += text.charAt(index);
+      index++;
+      setTimeout(typeEffect, 60);
+    }
   }
-}
 
-typeEffect();
+  typeEffect();
 
+});
+
+  
 
 
 
