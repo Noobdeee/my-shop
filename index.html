@@ -4,11 +4,11 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> My Herabete  v: 9.33.6 </title>    <!-- IMPROVING SCROLL EFFECT IN LOGGING PAGE and ADDING BETER UI  -->
+  <title> My Herabete  v: 9.35.0 </title>    <!-- IMPROVING SCROLL EFFECT IN LOGGING PAGE and ADDING BETER UI  -->
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js" type="module"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   
   <style> 
     body {
@@ -395,7 +395,57 @@ body.night button {
 }
 
 
+.lux-google-btn {
+  margin-top: 35px;
+  width: 100%;
+  padding: 14px 18px;
 
+  border-radius: 50px;  /* fully rounded pill */
+  border: 1px solid rgba(200,164,93,0.6);
+
+  background: linear-gradient(135deg, #1c1c1c, #2a2a2a);
+  color: #ffffff;
+
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.6px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+}
+
+@media (hover: hover) {
+  .lux-google-btn:hover {
+    transform: translateY(-2px);
+    border-color: #c8a45d;
+    box-shadow: 0 10px 30px rgba(200,164,93,0.3);
+  }
+}
+
+.lux-google-btn:active {
+  transform: scale(0.96);
+}
+
+.google-svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Mobile Optimization */
+@media (max-width: 480px) {
+  .lux-google-btn {
+    font-size: 15px;
+    padding: 14px 18px;
+  }
+}
 
 
 
@@ -413,7 +463,7 @@ body.night button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg,#0f172a,#1e293b);
+  background: linear-gradient(135deg,#397a37,#1c5129);
   color: white;
   text-align: center;
   position: relative;
@@ -421,11 +471,19 @@ body.night button {
 }
 
 .hero-title {
-  font-size: 42px;
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
   font-weight: 700;
-  opacity: 0;
-  transform: translateY(40px);
+  letter-spacing: 1px;
+  text-align: center;
+  color: white;
+
+  background: rgba(11, 72, 14, 0.6);   /* CHANGE COLOR HERE */
+  padding: 12px 20px;
+  border-radius: 25px;
+  display: inline-block;
 }
+
 
 .brand {
   background: linear-gradient(90deg,#22c55e,#38bdf8);
@@ -440,24 +498,18 @@ body.night button {
   transform: translateY(40px);
 }
 
-.premium-btn {
-  margin-top: 40px;
-  padding: 16px 36px;
-  font-size: 18px;
-  border-radius: 50px;
-  border: none;
-  cursor: pointer;
-  background: linear-gradient(90deg,#22c55e,#16a34a);
-  color: white;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 10px 25px rgba(34,197,94,0.4);
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 20px;
+  }
 }
 
-.premium-btn:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 15px 35px rgba(34,197,94,0.6);
-}
+
+
+
+
+
 
 /* Scroll hint */
 .scroll-indicator {
@@ -495,15 +547,37 @@ body.night button {
 
     /* ===== GLASS CARD ===== */
 .glass-card {
-  padding: 60px 50px;
-  border-radius: 25px;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.15);
-  box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+  padding: 45px 35px;
+  border-radius: 30px;
+  background: rgb(91, 144, 34);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(219, 17, 17, 0.15);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.45);
   animation: floatCard 6s ease-in-out infinite;
+  width: 70%;
+  max-width: 360px;   /* smaller and balanced */
 }
+
+
+
+.login-tooltip {
+  margin-bottom: 15px;
+  background: #111;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 25px;
+  font-size: 13px;
+  display: none;
+  transition: opacity 0.3s ease;
+}
+
+@keyframes pulseTip {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
 
 @keyframes floatCard {
   0% { transform: translateY(0px); }
@@ -512,8 +586,105 @@ body.night button {
 }
 
 
-    
-    
+
+.google-pro-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  margin: 25px auto;
+  width: 100%;              /* FULL width of container */
+  max-width: 340px;         /* Prevent too wide */
+  padding: 14px 20px;
+
+  border-radius: 40px;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-color: #1c5129;
+  background: white;
+  color: #333;
+  font-weight: 600;
+  font-size: 14px;
+
+  white-space: nowrap;      /* Keep in one line */
+  overflow: hidden;         /* Prevent text going outside */
+  box-sizing: border-box;   /* Important */
+}
+
+
+
+
+
+
+/* ===== LOGIN OVERLAY ===== */
+
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  display: none;
+  z-index: 9999;
+}
+
+.login-popup {
+  position: absolute;
+  background: white;
+  color: black;
+  padding: 14px 20px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  animation: fadeIn 0.3s ease;
+}
+
+.popup-arrow {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 16px;
+  background: white;
+  rotate: 45deg;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+
+/* ===== LOGIN GUIDE ===== */
+
+.login-guide {
+  position: fixed;
+  background: white;
+  color: black;
+  padding: 12px 18px;
+  border-radius: 18px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  display: none;
+  z-index: 9999;
+}
+
+.guide-arrow {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 14px;
+  height: 14px;
+  background: white;
+}
+
+
+
     
   </style>
 </head>
@@ -543,7 +714,8 @@ body.night button {
   
 <body>
 
-
+   
+  
 
 
   <div id="introSection" style="display:none;">
@@ -573,29 +745,43 @@ body.night button {
 
 
     
+<!-- LOGIN SECTION -->
+<section id="loginSection" class="login-hero">
   
-  <!-- LOGIN SECTION -->
-    <section id="loginSection" class="login-hero">
+
+
+  
 
   <div class="glass-card">
-  <h1 class="hero-title">
-  <span id="typingText"></span>
-</h1>
+
+    <h1 class="hero-title">
+      <span id="typingText"></span>
+    </h1>
 
     <p class="hero-sub">
       Premium Tiles & Marble Collection
     </p>
 
-    <button id="loginBtn" class="premium-btn">
-      Login with Google
+    
+
+
+    <button id="loginBtn" class="google-pro-btn">
+      <span class="google-icon-wrapper">
+        <svg width="18" height="18" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.6 0 6.8 1.2 9.4 3.5l7-7C36.4 2.3 30.6 0 24 0 14.7 0 6.7 5.4 2.7 13.3l8.3 6.4C13 13.4 18 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.7-2 5-4.3 6.5l6.7 5.2c3.9-3.6 6.3-9 6.3-15.2z"/>
+          <path fill="#FBBC05" d="M10.9 28.1c-1-2.7-1-5.5 0-8.2l-8.3-6.4C.9 17 0 20.4 0 24s.9 7 2.6 10.5l8.3-6.4z"/>
+          <path fill="#34A853" d="M24 48c6.6 0 12.1-2.2 16.2-6l-6.7-5.2c-2 1.4-4.5 2.2-9.5 2.2-6 0-11-3.9-12.8-9.2l-8.3 6.4C6.7 42.6 14.7 48 24 48z"/>
+        </svg>
+      </span>
+      <span>Continue with Google</span>
     </button>
+
   </div>
 
   <div class="scroll-indicator"></div>
 
 </section>
-
-
 
     
 </div>
@@ -734,7 +920,7 @@ body.night button {
   // ===== TYPING EFFECT =====
   document.addEventListener("DOMContentLoaded", () => {
 
-  const text = "Welcome to My Shop";
+  const text = "Tiles Pro & Marble";
   const typingElement = document.getElementById("typingText");
 
   let index = 0;
@@ -778,14 +964,6 @@ gsap.to(".hero-sub", {
   duration: 1,
   delay: 0.3,
   ease: "power3.out"
-});
-
-gsap.from(".premium-btn", {
-  opacity: 0,
-  scale: 0.8,
-  duration: 0.8,
-  delay: 0.6,
-  ease: "back.out(1.7)"
 });
 
 
@@ -1518,13 +1696,97 @@ gsap.registerPlugin(ScrollTrigger);
 
 
   
+/* ===== SMART LOGIN TOOLTIP ===== */
+
+let tooltipInterval;
 
 
-  
+
+// hide on click anywhere
+document.addEventListener("click", () => {
+  const tooltip = document.getElementById("loginTooltip");
+  tooltip.style.display = "none";
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===== LOGIN GUIDE SYSTEM ===== */
+
+const guide = document.getElementById("loginGuide");
+const loginBtn = document.getElementById("loginBtn");
+let guideInterval;
+
+function positionGuide() {
+  const rect = loginBtn.getBoundingClientRect();
+  guide.style.top = (rect.top - 70) + "px";
+  guide.style.left = (rect.left + rect.width / 2) + "px";
+  guide.style.transform = "translateX(-50%)";
+}
+
+function showGuide() {
+  if (!auth.currentUser) {
+    positionGuide();
+    guide.style.display = "block";
+
+    setTimeout(() => {
+      guide.style.display = "none";
+    }, 4000);
+  }
+}
+
+function startGuide() {
+  showGuide();
+
+  guideInterval = setInterval(() => {
+    if (!auth.currentUser) {
+      showGuide();
+    }
+  }, 5000);
+}
+
+document.addEventListener("click", () => {
+  guide.style.display = "none";
+});
+
+
+window.addEventListener("scroll", () => {
+  guide.style.display = "none";
+});
+
+
+
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    clearInterval(guideInterval);
+    guide.style.display = "none";
+  } else {
+    startGuide();
+  }
+});
+
+
+
 </script>
 
 
+<!-- LOGIN GUIDE POPUP -->
+<div id="loginGuide" class="login-guide">
+  Please login to continue your experience
+  <div class="guide-arrow"></div>
+</div>
 
-  
+
 </body>
 </html>
+
