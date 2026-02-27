@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> My Herabete  v: 9.37.0 </title>    <!-- trying for login page scroller and loop video autoplay and fixing after effects : login ke baad bhi loginn page show ho rha ia app main pahe mei, and scrooling ho rhi hai -->
+  <title> My Herabete  v: 9.38.0 </title>    <!-- LIVE VIDOE BACKGROUND IN LOGIN PAGE, -->
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js" type="module"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -16,10 +16,10 @@
       font-family: 'Segoe UI', Arial, sans-serif;
       background: #f5f6fa;
     }
-
-    html, body {
+html, body {
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 
@@ -481,7 +481,7 @@ body.night button {
   color: white;
 
   background: rgba(11, 72, 14, 0.6);   /* CHANGE COLOR HERE */
-  padding: 12px 20px;
+  padding: 12px 15px;
   border-radius: 25px;
   display: inline-block;
 }
@@ -499,7 +499,7 @@ body.night button {
 }
 
 .brand {
-  background: linear-gradient(90deg,#22c55e,#38bdf8);
+  background: linear-gradient(90deg ,#238705,#2fd511,#195e06);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -527,6 +527,7 @@ body.night button {
 
 
 /* Scroll hint */
+
 .scroll-indicator {
   position: absolute;
 
@@ -549,6 +550,7 @@ body.night button {
   animation: scrollAnim 1.5s infinite;
 }
 
+
 @keyframes scrollAnim {
   0% { opacity:0; transform:translate(-50%,0);}
   50% { opacity:1;}
@@ -562,7 +564,7 @@ body.night button {
 
     /* ===== GLASS CARD ===== */
 .glass-card {
-  padding: 45px 35px;
+  padding: 30px 10px;
   border-radius: 30px;
   background: rgb(91, 144, 34);
   backdrop-filter: blur(18px);
@@ -711,19 +713,14 @@ body.night button {
 
 #scrollTitle {
   font-size: 42px;
-  font-family: 'Playfair Display', serif;  /* Change font */
+  font-family: 'Playfair Display', serif;
   font-weight: 700;
-  opacity: 1;
-    color: #000400fd;   
+  color: #000400fd;
+  line-height: 1.2;       /* Adjust spacing between lines */
+  text-align: center;
   transition: opacity 0.5s ease;
 }
 
-#scrollSubtitle {
-  font-size: 18px;
-  margin-top: 10px;
-  opacity: 0.8;
-  transition: opacity 0.5s ease;
-}
 
     
 
@@ -844,24 +841,57 @@ html {
   pointer-events: none;
 }
 
+#scrollVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 
 #videoWrapper {
   position: relative;
   height: 95vh;
+  overflow: hidden
 }
 
 #loginSection {
   position: relative;
 }
+
 #scrollHint {
-  position: fixed;
-  bottom: 25px;          /* distance from bottom */
+  position: fixed;       /* important */
+  bottom: 30px;          /* always bottom of screen */
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
-  transition: transform 0.6s ease;
+  transition: opacity 0.4s ease;
 }
 
+#floatingHeading {
+  position: relative;     /* normal flow, scrolls with content */
+  width: 100%;
+  text-align: center;
+  background: #000000;    /* box color */
+  padding: 15px 0;        /* box height */
+  z-index: 1;             /* just to stay above default elements if needed */
+  margin-bottom: 10px;    /* spacing below heading */
+}
+
+#floatingHeading h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 800;
+  color: #22c55e;
+  margin: 0;
+}
+
+/* Video wrapper stays below heading */
+#videoWrapper {
+  position: relative;
+  height: 95vh;
+  overflow: hidden;
+  margin-top: 0;         /* no overlap, heading already takes space */
+}
 
 
   </style>
@@ -892,33 +922,45 @@ html {
   
 <body>
 
+
+
+<!-- Heading fixed on top of device -->
+<div id="floatingHeading">
+  <h1>TILES PRO & MARBLE</h1>
+</div>
+
 <div id="scrollDirectionIndicator">⬇</div>
 
 <div id="introSection">
 
-  <div id="videoWrapper">
-
-    <div id="scrollTextContainer">
-      <h1 id="scrollTitle">Welcome to Tiles Pro</h1>
-      <p id="scrollSubtitle">Premium Marble & Designer Tiles</p>
-    </div>
+  
+<div id="scrollTextContainer">
+  <!-- optional other text if needed -->
+</div>
+    
 
     
-    <video
-      id="scrollVideo"
-      src="https://cdn.jsdelivr.net/gh/Noobdeee/my-shop@main/images/best_italian_tiles_for_flooring_marble_tiles_720P.mp4"
-      muted
-      playsinline
-      preload="auto"
-      style="
-        position: sticky;
-        top: 0;
-        width: 100%;
-        height: 100vh;
-        object-fit: cover;
-      ">
-    </video>
+  <!-- SCROLL HINT (ONLY ONE — INSIDE LOGIN SECTION) -->
+  <div id="scrollHint">
+    <div class="flip-container">
+      <div class="flip-inner">
+        <div class="flip-front">⬇  ⬇   SCROLL DOWN  ⬇   ⬇</div>
+        <div class="flip-back">LOGIN PAGE</div>
+      </div>
+    </div>
+  </div>
 
+
+    <video
+  id="scrollVideo"
+  autoplay
+  muted
+  loop
+  playsinline
+  preload="auto"
+>
+  <source src="https://cdn.jsdelivr.net/gh/Noobdeee/my-shop@main/images/best_italian_tiles_for_flooring_marble_tiles_720P.mp4" type="video/mp4">
+</video>
   </div>
 
   
@@ -940,15 +982,6 @@ html {
 <!-- LOGIN SECTION -->
 <section id="loginSection" class="login-hero">
 
-  <!-- SCROLL HINT (ONLY ONE — INSIDE LOGIN SECTION) -->
-  <div id="scrollHint">
-    <div class="flip-container">
-      <div class="flip-inner">
-        <div class="flip-front">⬇  ⬇   SCROLL DOWN  ⬇   ⬇</div>
-        <div class="flip-back">LOGIN PAGE</div>
-      </div>
-    </div>
-  </div>
 
   <div class="glass-card">
 
@@ -1111,32 +1144,12 @@ html {
 
 
 
+ 
 
 
 
-document.addEventListener("DOMContentLoaded", () => {
-  const flipInner = document.querySelector(".flip-inner");
-  const loginSection = document.getElementById("loginSection");
 
-  if (!flipInner || !loginSection) return;
 
-  function checkFlip() {
-    const loginTop = loginSection.getBoundingClientRect().top;
-
-    // Trigger when login section reaches top 80% of viewport
-    if (loginTop < window.innerHeight * 0.8) {
-      flipInner.classList.add("flipped");
-    } else {
-      flipInner.classList.remove("flipped");
-    }
-  }
-
-  // Check on scroll
-  window.addEventListener("scroll", checkFlip);
-
-  // Check on load (in case page starts scrolled)
-  checkFlip();
-});
 
 
 
@@ -1177,27 +1190,6 @@ window.addEventListener("scroll", () => {
 
 
 
-const scrollTitle = document.getElementById("scrollTitle");
-const scrollSubtitle = document.getElementById("scrollSubtitle");
-
-window.addEventListener("scroll", () => {
-  const scrollY = window.scrollY;
-  const maxScroll = document.body.scrollHeight - window.innerHeight;
-  const progress = scrollY / maxScroll;
-
-  if (progress < 0.3) {
-    scrollTitle.textContent = "Welcome to Tiles Pro";
-    scrollSubtitle.textContent = "Premium Marble & Designer Tiles";
-  } 
-  else if (progress < 0.6) {
-    scrollTitle.textContent = "Italian Finish. Luxury Feel.";
-    scrollSubtitle.textContent = "Crafted for Modern Homes";
-  } 
-  else {
-    scrollTitle.textContent = "Scroll Down to Enter Shop...";
-    scrollSubtitle.textContent = "Login to Explore Collection";
-  }
-});
 
 
 
@@ -1257,8 +1249,24 @@ gsap.to(".hero-sub", {
   ease: "power3.out"
 });
 
+// ===== SCROLL HINT ANIMATION =====
+gsap.registerPlugin(ScrollTrigger);
 
 
+
+// Flip when login section enters
+ScrollTrigger.create({
+  trigger: "#loginSection",
+  start: "top 50%",
+  onEnter: () => {
+    document.querySelector(".flip-inner")
+      ?.classList.add("flipped");
+  },
+  onLeaveBack: () => {
+    document.querySelector(".flip-inner")
+      ?.classList.remove("flipped");
+  }
+});
 
 
 
@@ -1539,11 +1547,7 @@ onAuthStateChanged(auth, (user) => {
     if (shop) shop.style.display = "none";
 
 
-    setTimeout(() => {
-  ScrollTrigger.refresh();
-  initScrollVideo();
-}, 500);
-
+    
 
 
     
@@ -1947,43 +1951,8 @@ document.getElementById("addProductBtn").onclick = () => alert("Use sheet to add
 
 
 
-  /* ================= SCROLL VIDEO CONTROL ================= */
-
-gsap.registerPlugin(ScrollTrigger);
 
 
-  function initScrollVideo() {
-  const video = document.getElementById("scrollVideo");
-  if (!video) return;
-
-  video.pause();
-  video.muted = true;
-  video.setAttribute("playsinline", "");
-  video.setAttribute("webkit-playsinline", "");
-  video.preload = "auto";
-
-  const setupScroll = () => {
-    const duration = video.duration;
-
-    gsap.to(video, {
-      currentTime: duration,
-      ease: "none",
-      scrollTrigger: {
-        trigger: video.parentElement,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: true,
-        invalidateOnRefresh: true
-      }
-    });
-  };
-
-  if (video.readyState >= 1) {
-    setupScroll();
-  } else {
-    video.addEventListener("loadedmetadata", setupScroll);
-  }
-}
 
 
   
@@ -2078,6 +2047,16 @@ onAuthStateChanged(auth, (user) => {
   Login To Continue
   <div class="guide-arrow"></div>
 </div>
+
+
+
+
+
+
+
+
+
+
 
 
 </body>
