@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html> 
 <html>
 <head>
@@ -926,14 +925,30 @@ html {
 
 
 
-<!-- Heading fixed on top of device -->
-<div id="floatingHeading">
-  <h1>TILES PRO & MARBLE</h1>
+<div id="authLoading">
+  <div class="loader-box">
+    <img 
+      src="https://github.com/Noobdeee/my-shop/blob/main/images/TilesPro.jpg?raw=true"
+      class="shop-logo"
+      alt="Tiles Pro and Marble">
+
+    <dotlottie-wc 
+      src="https://lottie.host/631ccc0b-6bcc-42e0-8cc5-4664874cfed9/8BU1X6vtgD.lottie"
+      autoplay
+      class="loading-animation">
+    </dotlottie-wc>
+  </div>
 </div>
 
+  
+
+<!-- Heading fixed on top of device -->
+<div id="floatingHeading" style="display:none;">
+  <h1>TILES PRO & MARBLE</h1>
+</div>
 <div id="scrollDirectionIndicator">⬇</div>
 
-<div id="introSection">
+<div id="introSection" style="display:none;">
 
     
 
@@ -971,9 +986,7 @@ html {
 
 
 
-<!-- LOGIN SECTION -->
-<section id="loginSection" class="login-hero">
-
+<!-- LOGIN SECTION --><section id="loginSection" class="login-hero" style="display:none;">
 
   <div class="glass-card">
 
@@ -1027,25 +1040,7 @@ html {
 
 
 
-  
-<div id="authLoading">
 
-  <div class="loader-box">
-
-    <img 
-      src="https://github.com/Noobdeee/my-shop/blob/main/images/TilesPro.jpg?raw=true"
-      class="shop-logo"
-      alt="Tiles Pro and Marble">
-
-    <dotlottie-wc 
-      src="https://lottie.host/631ccc0b-6bcc-42e0-8cc5-4664874cfed9/8BU1X6vtgD.lottie"
-      autoplay
-      class="loading-animation">
-    </dotlottie-wc>
-
-  </div>
-
-</div>
 
 
 
@@ -1133,7 +1128,45 @@ html {
 
 
 
+/* ================= FINAL SMART LOADER ================= */
 
+window.addEventListener("load", () => {
+
+  const loader = document.getElementById("authLoading");
+  const video = document.getElementById("scrollVideo");
+
+  const MIN_TIME = 800; // loader visible at least 1.5s
+  const startTime = performance.now();
+
+  function hideLoaderWhenReady() {
+
+    const elapsed = performance.now() - startTime;
+    const remaining = MIN_TIME - elapsed;
+
+    setTimeout(() => {
+
+      loader.style.transition = "opacity 0.6s ease";
+      loader.style.opacity = "0";
+
+      setTimeout(() => {
+        loader.style.display = "none";
+      }, 600);
+
+    }, remaining > 0 ? remaining : 0);
+  }
+
+  // If video exists → wait for it
+  if (video) {
+    if (video.readyState >= 3) {
+      hideLoaderWhenReady();
+    } else {
+      video.addEventListener("canplaythrough", hideLoaderWhenReady);
+    }
+  } else {
+    hideLoaderWhenReady();
+  }
+
+});
 
  
 
@@ -1242,20 +1275,14 @@ gsap.to(".hero-sub", {
 
 // ===== SCROLL HINT ANIMATION =====
 gsap.registerPlugin(ScrollTrigger);
-
-
-
-// Flip when login section enters
 ScrollTrigger.create({
   trigger: "#loginSection",
-  start: "top 50%",
+  start: "top 30%",   // when login touches bottom of screen
   onEnter: () => {
-    document.querySelector(".flip-inner")
-      ?.classList.add("flipped");
+    document.querySelector(".flip-inner")?.classList.add("flipped");
   },
   onLeaveBack: () => {
-    document.querySelector(".flip-inner")
-      ?.classList.remove("flipped");
+    document.querySelector(".flip-inner")?.classList.remove("flipped");
   }
 });
 
@@ -1483,8 +1510,12 @@ function logoutUser() {
 
 
 
-  
-  
+  const intro = document.getElementById("introSection");
+const login = document.getElementById("loginSection");
+const shop = document.getElementById("shopContent");
+const heading = document.getElementById("floatingHeading");
+  const loader = document.getElementById("authLoading");
+
 onAuthStateChanged(auth, (user) => {
 
   adminUnlocked = false;
@@ -1496,8 +1527,10 @@ onAuthStateChanged(auth, (user) => {
 
   if (user) {
 
-    // ✅ NEW (show shop, hide intro)
+    // 🔥 AFTER LOGIN → SHOW SHOP ONLY
     if (intro) intro.style.display = "none";
+    if (login) login.style.display = "none";
+    if (heading) heading.style.display = "none";
     if (shop) shop.style.display = "block";
 
     document.getElementById("userSection").style.display = "flex";
@@ -1533,12 +1566,14 @@ onAuthStateChanged(auth, (user) => {
 
   } else {
 
-    // ✅ NEW (show intro, hide shop)
+     // 🔥 BEFORE LOGIN → SHOW INTRO + LOGIN
     if (intro) intro.style.display = "block";
+    if (login) login.style.display = "flex";
+    if (heading) heading.style.display = "block";
     if (shop) shop.style.display = "none";
 
 
-    
+    ScrollTrigger.refresh();
 
 
     
@@ -1547,26 +1582,23 @@ onAuthStateChanged(auth, (user) => {
   }
 
   authReady = true;
-  checkAppReady();
-
-});
 
 
-  
+// 🔥 ALWAYS hide loading after auth check
+
+
+  });
   
   
   loadProducts();
 
 
 
-
+  
+  
 
   
-function checkAppReady() {
-  if (authReady && productsReady) {
-    document.getElementById("authLoading").style.display = "none";
-  }
-}
+  
 
 
 
@@ -1655,7 +1687,7 @@ function loadProducts() {
       renderProducts();
 
       productsReady = true;
-      checkAppReady();
+      
     });
 }
 
@@ -1985,15 +2017,12 @@ function positionGuide() {
   guide.style.left = (rect.left + rect.width / 2) + "px";
   guide.style.transform = "translateX(-50%)";
 }
-
 function showGuide() {
   if (!auth.currentUser) {
-    positionGuide();if (guide)
-    guide.style.display = "block";
-
-    setTimeout(() => {if (guide) 
-      guide.style.display = "none";
-    }, 4000);
+    positionGuide();
+    if (guide) {
+      guide.style.display = "block";
+    }
   }
 }
 
