@@ -4,18 +4,19 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> My Herabete  v: 9.38.2 </title>    <!-- LIVE VIDOE BACKGROUND IN LOGIN PAGE, -->
+  <title> My Herabete  v: 9.39.0 </title>    <!-- lgin page done and custoom theme name not come error h -->
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js" type="module"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   
   <style> 
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f5f6fa;
-    }
+    
+  body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -480,8 +481,7 @@ body.night button {
   text-align: center;
   color: white;
 
-  background: rgba(11, 72, 14, 0.6);   /* CHANGE COLOR HERE */
-  padding: 12px 15px;
+    padding: 12px 15px;
   border-radius: 25px;
   display: inline-block;
 }
@@ -844,24 +844,19 @@ html {
 }
 #scrollVideo {
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 80px);
   object-fit: cover;
   display: block;
 }
 
-#videoWrapper {
-  position: relative;
-  height: 95vh;
-  overflow: hidden
-}
+
+
 #loginSection {
   min-height: 100vh;
 }
-#introSection {
-  width: 100%;
-  height: 100vh;
-  position: relative;
-}
+
+
+
 #scrollHint {
   position: fixed;       /* important */
   bottom: 10px;          /* always bottom of screen */
@@ -870,30 +865,36 @@ html {
   z-index: 9999;
   transition: opacity 0.4s ease;
 }
+
 #floatingHeading {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
+  z-index: 9999;
+  height: 80px; 
+  background: rgb(5, 39, 6);
+  padding: 0px 0;
   text-align: center;
-  background: #000;
-  padding: 15px 0;
-  margin: 0;
+  display: flex;              /* Important */
+  align-items: center;        /* Vertical center */
+  justify-content: center; 
+  
 }
+
 
 #floatingHeading h1 {
   font-family: 'Playfair Display', serif;
-  font-size: 30px;
+  font-size: 25px;
   font-weight: 800;
   color: #22c55e;
-  margin: 0;
+  margin: 20px;
 }
 
-/* Video wrapper stays below heading */
-#videoWrapper {
-  position: relative;
-  height: 95vh;
-  overflow: hidden;
-  margin-top: 0;         /* no overlap, heading already takes space */
-}
 
+#introSection {
+  margin-top: 80px;
+}
 
   </style>
 </head>
