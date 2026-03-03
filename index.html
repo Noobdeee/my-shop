@@ -4,7 +4,7 @@
 <head>
   <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> My Herabete  v: 9.39.0 </title>    <!-- lgin page done and custoom theme name not come error h -->
+  <title> My Herabete  v: 9.40.0 </title>    <!-- LIVE VIDOE BACKGROUND IN LOGIN PAGE, -->
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js" type="module"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -66,6 +66,7 @@ html, body {
 
     .card {
       background: white;
+       color: #000;
       border-radius: 14px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.08);
       overflow: hidden;
@@ -1129,23 +1130,39 @@ html {
 
 
 
-/* ================= FINAL SMART LOADER ================= */
 
-window.addEventListener("load", () => {
+
+function lightenColor(hex, percent) {
+  hex = hex.replace("#", "");
+
+  let r = parseInt(hex.substring(0, 2), 16);
+  let g = parseInt(hex.substring(2, 4), 16);
+  let b = parseInt(hex.substring(4, 6), 16);
+
+  r = Math.min(255, Math.floor(r + (255 - r) * percent / 100));
+  g = Math.min(255, Math.floor(g + (255 - g) * percent / 100));
+  b = Math.min(255, Math.floor(b + (255 - b) * percent / 100));
+
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+
+
+
+
+/* ================= FINAL SMART LOADER ================= */
+document.addEventListener("DOMContentLoaded", () => {
 
   const loader = document.getElementById("authLoading");
-  const video = document.getElementById("scrollVideo");
 
-  const MIN_TIME = 800; // loader visible at least 1.5s
-  const startTime = performance.now();
+  const MIN_TIME = 2000; // 2 seconds minimum
+  const startTime = Date.now();
 
-  function hideLoaderWhenReady() {
-
-    const elapsed = performance.now() - startTime;
+  function hideLoader() {
+    const elapsed = Date.now() - startTime;
     const remaining = MIN_TIME - elapsed;
 
     setTimeout(() => {
-
       loader.style.transition = "opacity 0.6s ease";
       loader.style.opacity = "0";
 
@@ -1156,20 +1173,8 @@ window.addEventListener("load", () => {
     }, remaining > 0 ? remaining : 0);
   }
 
-  // If video exists → wait for it
-  if (video) {
-    if (video.readyState >= 3) {
-      hideLoaderWhenReady();
-    } else {
-      video.addEventListener("canplaythrough", hideLoaderWhenReady);
-    }
-  } else {
-    hideLoaderWhenReady();
-  }
-
+  hideLoader();
 });
-
- 
 
 
 
@@ -1308,7 +1313,8 @@ document.getElementById("saveCustomThemeBtn").addEventListener("click", () => {
   const g = parseInt(color.substr(3,2),16);
   const b = parseInt(color.substr(5,2),16);
   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  document.body.style.color = brightness > 128 ? "#000" : "#fff";
+ 
+  
 
   localStorage.setItem("theme", "custom");
   localStorage.setItem("customColor", color);
@@ -1344,11 +1350,18 @@ window.addEventListener("DOMContentLoaded", () => {
     document.body.classList.remove("night");
     document.body.style.background = savedColor;
 
+    const lighter = lightenColor(savedColor, 35);
+
+document.querySelectorAll(".card").forEach(card => {
+  card.style.background = lighter;
+}); 
+
     const r = parseInt(savedColor.substr(1,2),16);
     const g = parseInt(savedColor.substr(3,2),16);
     const b = parseInt(savedColor.substr(5,2),16);
     const brightness = (r*299 + g*587 + b*114)/1000;
-    document.body.style.color = brightness > 128 ? "#000" : "#fff";
+    
+    
 
     colorInput.value = savedColor;
     colorPreview.style.background = savedColor;
@@ -1363,17 +1376,29 @@ window.addEventListener("DOMContentLoaded", () => {
   select.addEventListener("change", () => {
     const theme = select.value;
 
-    if (theme === "day") {
-      document.body.classList.remove("night");
-      document.body.style.background = "";
-      document.body.style.color = "";
-      localStorage.setItem("theme", "day");
-    } else if (theme === "night") {
-      document.body.classList.add("night");
-      document.body.style.background = "";
-      document.body.style.color = "";
-      localStorage.setItem("theme", "night");
-    } else if (theme === "custom") {
+  if (theme === "day") {
+  document.body.classList.remove("night");
+  document.body.style.background = "";
+
+  // 🔥 CLEAR CUSTOM CARD BACKGROUND
+  document.querySelectorAll(".card").forEach(card => {
+    card.style.background = "";
+  });
+
+  localStorage.setItem("theme", "day");
+}
+else if (theme === "night") {
+  document.body.classList.add("night");
+  document.body.style.background = "";
+
+  // 🔥 CLEAR CUSTOM CARD BACKGROUND
+  document.querySelectorAll(".card").forEach(card => {
+    card.style.background = "";
+  });
+
+  localStorage.setItem("theme", "night");
+}
+else if (theme === "custom") {
 
   const savedColor = localStorage.getItem("customColor");
 
@@ -1402,7 +1427,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
     document.body.classList.remove("night");
     document.body.style.background = color;
-    document.body.style.color = brightness > 128 ? "#000" : "#fff";
+    const lighter = lightenColor(color, 35);
+
+document.querySelectorAll(".card").forEach(card => {
+  card.style.background = lighter;
+});
+    
 
     localStorage.setItem("theme", "custom");
     localStorage.setItem("customColor", color);
@@ -1562,7 +1592,8 @@ onAuthStateChanged(auth, (user) => {
       const b = parseInt(pink.substr(5,2),16);
       const brightness = (r*299 + g*587 + b*114)/1000;
 
-      document.body.style.color = brightness > 128 ? "#000" : "#fff";
+      
+      
     }
 
   } else {
@@ -1823,6 +1854,19 @@ if (card.classList.contains("show")) {
 
     list.appendChild(card);
   });
+
+
+  const savedTheme = localStorage.getItem("theme");
+const savedColor = localStorage.getItem("customColor");
+
+if (savedTheme === "custom" && savedColor) {
+  const lighter = lightenColor(savedColor, 35);
+
+  document.querySelectorAll(".card").forEach(card => {
+    card.style.background = lighter;
+  });
+}
+
 }
 
 
@@ -1943,7 +1987,14 @@ saveBtn.addEventListener("click", () => {
 
   document.body.classList.remove("night");
   document.body.style.background = color;
-  document.body.style.color = textColor;
+ 
+  // 🔥 MAKE CARDS LIGHTER
+  const lighter = lightenColor(color, 35);
+
+  document.querySelectorAll(".card").forEach(card => {
+    card.style.background = lighter;
+  });
+
 
   localStorage.setItem("theme", "custom");
   localStorage.setItem("customColor", color);
